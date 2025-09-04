@@ -1,5 +1,6 @@
 import express from "express";
 import UserModule from "./modules/users/users.module.js";
+import errorHandler from "./common/middlewares/error.handler.js";
 
 class AppModule {
   constructor() {
@@ -11,6 +12,8 @@ class AppModule {
     this.app.use((req, res) => {
       res.status(404).json({ message: "Route not found!" });
     });
+
+    this.app.use(errorHandler);
   }
 
   listen(port, callback) {
