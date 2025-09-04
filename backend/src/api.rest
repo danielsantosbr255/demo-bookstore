@@ -1,0 +1,22 @@
+### CREATE
+POST http://localhost:5000/api/users
+Content-Type: application/json
+
+{
+  "name": "Daniel Santos",
+  "email": "daniel@email.com",
+  "password": "123123"
+}
+
+### READ
+GET http://localhost:5000/api/users
+
+### UPDATE
+PUT http://localhost:5000/api/users/3
+Content-Type: application/json
+
+{
+  "name": "João",
+  "email": "joao@gmail.com",
+  "password": "123123"
+}
