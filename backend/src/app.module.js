@@ -1,12 +1,21 @@
 import express from "express";
 import UserModule from "./modules/users/users.module.js";
 
-import "./config/database/generate.js";
+class AppModule {
+  constructor() {
+    this.app = express();
 
-const app = express();
+    this.app.use(express.json());
+    this.app.use("/api", [UserModule]);
 
-app.use(express.json());
+    this.app.use((req, res) => {
+      res.status(404).json({ message: "Route not found!" });
+    });
+  }
 
-app.use("/api", [UserModule]);
+  listen(port, callback) {
+    this.app.listen(port, callback);
+  }
+}
 
-export default app;
+export default new AppModule();

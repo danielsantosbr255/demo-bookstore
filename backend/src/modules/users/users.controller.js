@@ -1,10 +1,6 @@
-import db from "../../config/database/database.js";
+import User from "../../models/User.js";
 
 class UserController {
-  constructor() {
-    this.db = db;
-  }
-
   create = async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -12,58 +8,67 @@ class UserController {
       return res.status(400).json({ message: "All fields are required!" });
     }
 
-    const userExists = await this.db.query("SELECT * FROM users WHERE email = $1", [email]);
+    const userExists = await User.findUnique({ where: { email } });
 
-    if (userExists.rows.length > 0) {
+    if (userExists) {
       return res.status(400).json({ message: "User already exists!" });
     }
 
-    const result = await this.db.query(
-      `
-      INSERT INTO users (name, email, password)
-      VALUES ($1, $2, $3)
-      RETURNING *
-      `,
-      [name, email, password]
-    );
+    const createdUser = await User.create({ name, email, password });
 
-    res.status(201).json({ message: "User created successfuly!", data: result.rows });
+    res.status(201).json({ message: "User created successfuly!", data: createdUser });
   };
 
   getAll = async (req, res) => {
-    const result = await this.db.query("SELECT * FROM users");
-    res.json({ message: "All Users", data: result.rows });
+    const users = await User.findMany();
+    res.json({ message: "All Users", data: users });
   };
 
   getOne = async (req, res) => {
     const { id } = req.params;
 
-    const result = await this.db.query("SELECT * FROM users WHERE id = $1", [id]);
-    res.json({ message: "User", data: result.rows[0] });
+    const user = await User.findUnique({ where: { id } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    res.json({ message: "User", data: user });
   };
 
   update = async (req, res) => {
     const { id } = req.params;
     const { name, email, password } = req.body;
 
-    const result = await this.db.query(
-      `
-      UPDATE users
-      SET name = $1, email = $2, password = $3
-      WHERE id = $4
-      RETURNING *
-      `,
-      [name, email, password, id]
-    );
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required!" });
+    }
 
-    res.json({ message: "User updated successfuly!", data: result.rows[0] });
+    const user = await User.findUnique({ where: { id } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    const updatedUser = await User.update({
+      where: { id },
+      data: { name, email, password },
+    });
+
+    res.json({ message: "User updated successfuly!", data: updatedUser });
   };
 
   delete = async (req, res) => {
     const { id } = req.params;
 
-    const result = await this.db.query("DELETE FROM users WHERE id = $1", [id]);
-    res.json({ message: "User deleted successfuly!", data: result.rows[0] });
+    const userExists = await User.findUnique({ where: { id } });
+
+    if (!userExists) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    const user = await User.delete({ id });
+    res.json({ message: "User deleted successfuly!", data: user });
   };
 }
 

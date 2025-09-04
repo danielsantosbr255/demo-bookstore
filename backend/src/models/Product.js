@@ -1,27 +1,41 @@
-import db from "../common/database/database.js";
+import BaseModel from "../config/database/baseModel.js";
 
-const createTable = () => {
-  return db.query(`
-    CREATE TABLE IF NOT EXISTS products (
-      id SERIAL PRIMARY KEY,
-      title VARCHAR(100) NOT NULL,
-      description VARCHAR(255) NOT NULL,
-      price DECIMAL(10, 2) NOT NULL,
-      slug VARCHAR(100) UNIQUE NOT NULL,
-      brandId INT NOT NULL,
-      categoryId INT NOT NULL,      
+class CategoryModel extends BaseModel {
+  constructor() {
+    super("products", {
+      id: "number",
+      title: "string",
+      description: "string",
+      price: "decimal",
+      slug: "string",
+      brandId: "number",
+      categoryId: "number",
+    });
+  }
 
-      FOREIGN KEY (categoryId) REFERENCES categories(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+  createTable = () => {
+    return this.db.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(100) NOT NULL,
+        description VARCHAR(255) NOT NULL,
+        price DECIMAL(10, 2) NOT NULL,
+        slug VARCHAR(100) UNIQUE NOT NULL,
+        brandId INT NOT NULL,
+        categoryId INT NOT NULL,      
+  
+        FOREIGN KEY (categoryId) REFERENCES categories(id)
+          ON DELETE CASCADE
+          ON UPDATE CASCADE,
+  
+        FOREIGN KEY (brandId) REFERENCES brands(id)
+          ON DELETE CASCADE
+          ON UPDATE CASCADE,
+  
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP
+      )`);
+  };
+}
 
-      FOREIGN KEY (brandId) REFERENCES brands(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-
-      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updatedAt TIMESTAMP
-    )`);
-};
-
-export default { createTable };
+export default new CategoryModel();

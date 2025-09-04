@@ -11,6 +11,9 @@ Content-Type: application/json
 ### READ
 GET http://localhost:5000/api/users
 
+### READ BY ID
+GET http://localhost:5000/api/users/2
+
 ### UPDATE
 PUT http://localhost:5000/api/users/3
 Content-Type: application/json
@@ -20,3 +23,6 @@ Content-Type: application/json
   "email": "joao@gmail.com",
   "password": "123123"
 }
+
+### DELETE
+DELETE http://localhost:5000/api/users/3
