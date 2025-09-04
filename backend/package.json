@@ -6,13 +6,15 @@
   "main": "src/main.js",
   "scripts": {
     "start": "node .",
-    "dev": "node --watch --env-file=.env .",
+    "dev": "node --watch --env-file=.env .",    
+    "migrate": "node --env-file=.env ./src/config/database/migrate.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "pg": "^8.16.3"
   }

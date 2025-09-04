@@ -1,14 +1,14 @@
 import express from "express";
-import UsersService from "./users.service.js";
-import UsersController from "./users.controller.js";
-import UsersRepository from "./users.repository.js";
+import ProductService from "./products.service.js";
+import ProductRepository from "./products.repository.js";
+import ProductsController from "./products.controller.js";
 
-export default class UsersModule {
+export default class ProductsModule {
   constructor() {
-    this.name = "users";
-    this.repository = new UsersRepository();
-    this.service = new UsersService(this.repository);
-    this.controller = new UsersController(this.service);
+    this.name = "products";
+    this.repository = new ProductRepository();
+    this.service = new ProductService(this.repository);
+    this.controller = new ProductsController(this.service);
     this.router = this._buildRouter();
   }
 
@@ -25,8 +25,6 @@ export default class UsersModule {
   }
 
   static create() {
-    return new UsersModule();
+    return new ProductsModule();
   }
 }
-
-// .bind(this.controller)

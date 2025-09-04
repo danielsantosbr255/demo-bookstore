@@ -1,4 +1,7 @@
+process.loadEnvFile();
+
 import { Pool } from "pg";
+import logger from "../../common/logger.js";
 
 class Database {
   constructor() {
@@ -14,18 +17,18 @@ class Database {
   async connect() {
     try {
       await this.db.connect();
-      console.log("🏦 Database connected!");
+      logger.info("🏦 Database connected!");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
   async disconnect() {
     try {
       await this.db.end();
-      console.log("Database disconnected!");
+      logger.info("🏦 Database disconnected!");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 

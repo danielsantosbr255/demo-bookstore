@@ -1,6 +1,11 @@
-import User from "../../models/User.js";
+import UsersService from "./users.service.js";
 
-class UserController {
+export default class UserController {
+  /**  @param {UsersService} service */
+  constructor(service) {
+    this.service = service;
+  }
+
   create = async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -8,30 +13,24 @@ class UserController {
       return res.status(400).json({ message: "All fields are required!" });
     }
 
-    const userExists = await User.findUnique({ where: { email } });
+    const userExists = await this.service.getByEmail(email);
+    if (!userExists) return res.status(404).json({ message: "User not found!" });
 
-    if (userExists) {
-      return res.status(400).json({ message: "User already exists!" });
-    }
-
-    const createdUser = await User.create({ name, email, password });
+    const createdUser = await this.service.create({ name, email, password });
 
     res.status(201).json({ message: "User created successfuly!", data: createdUser });
   };
 
   getAll = async (req, res) => {
-    const users = await User.findMany();
+    const users = await this.service.getMany();
     res.json({ message: "All Users", data: users });
   };
 
   getOne = async (req, res) => {
     const { id } = req.params;
 
-    const user = await User.findUnique({ where: { id } });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found!" });
-    }
+    const user = await this.service.getOne(id);
+    if (!user) return res.status(404).json({ message: "User not found!" });
 
     res.json({ message: "User", data: user });
   };
@@ -44,16 +43,10 @@ class UserController {
       return res.status(400).json({ message: "All fields are required!" });
     }
 
-    const user = await User.findUnique({ where: { id } });
+    const user = await this.service.getOne(id);
+    if (!user) return res.status(404).json({ message: "User not found!" });
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found!" });
-    }
-
-    const updatedUser = await User.update({
-      where: { id },
-      data: { name, email, password },
-    });
+    const updatedUser = await this.service.update(id, { name, email, password });
 
     res.json({ message: "User updated successfuly!", data: updatedUser });
   };
@@ -61,15 +54,10 @@ class UserController {
   delete = async (req, res) => {
     const { id } = req.params;
 
-    const userExists = await User.findUnique({ where: { id } });
+    const existsUser = await this.service.getOne(id);
+    if (!existsUser) return res.status(404).json({ message: "User not found!" });
 
-    if (!userExists) {
-      return res.status(404).json({ message: "User not found!" });
-    }
-
-    const user = await User.delete({ id });
+    const user = await this.service.delete(id);
     res.json({ message: "User deleted successfuly!", data: user });
   };
 }
-
-export default new UserController();

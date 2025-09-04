@@ -3,7 +3,7 @@ import path from "path";
 import database from "./database.js";
 
 const pool = database.getClient();
-const __dirname = path.resolve();
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 async function runMigrations() {
   const migrationsDir = path.join(__dirname, "migrations");

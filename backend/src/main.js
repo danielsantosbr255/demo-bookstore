@@ -1,19 +1,28 @@
-import app from "./app.module.js";
+import cors from "cors";
+import express from "express";
+import logger from "./common/logger.js";
+import AppModule from "./app.module.js";
 import database from "./config/database/database.js";
+import errorHandler from "./common/middlewares/error.handler.js";
 
-const PORT = process.env.PORT ?? 3000;
+async function bootstrap() {
+  const app = express();
 
-async function start() {
-  try {
-    await database.connect();
+  app.use(express.json());
+  app.use(cors());
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server is running on port ${PORT}!`);
-    });
-  } catch (error) {
-    console.error("❌ Error starting server:", error);
-    process.exit(1);
-  }
+  await database.connect();
+
+  const appModule = new AppModule();
+  appModule.init(app);
+
+  app.use(errorHandler);
+
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => logger.info(`🚀 Server running: http://localhost:${PORT}`));
 }
 
-start();
+bootstrap().catch((err) => {
+  logger.error("❌ Bootstrap error:", err);
+  process.exit(1);
+});
