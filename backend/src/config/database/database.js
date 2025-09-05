@@ -1,7 +1,7 @@
 process.loadEnvFile();
 
 import { Pool } from "pg";
-import logger from "../../common/logger.js";
+import logger from "../../common/utils/logger.js";
 
 class Database {
   constructor() {

@@ -1,7 +1,7 @@
 import cors from "cors";
 import express from "express";
-import logger from "./common/logger.js";
 import AppModule from "./app.module.js";
+import logger from "./common/utils/logger.js";
 import database from "./config/database/database.js";
 import errorHandler from "./common/middlewares/error.handler.js";
 

@@ -1,4 +1,4 @@
-import logger from "./common/logger.js";
+import logger from "./common/utils/logger.js";
 import UsersModule from "./modules/users/users.module.js";
 import ProductsModule from "./modules/products/products.module.js";
 
