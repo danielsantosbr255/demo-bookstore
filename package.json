@@ -4,9 +4,15 @@
   "description": "Repository to improve full stack skills with: TypeScript, NodeJS, ReactJS, SQL, Linux, Docker",
   "main": "commitlint.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo Hello, world!",
     "prepare": "husky",
     "cz": "czg"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write --ignore-unknown"
+    ]
   },
   "repository": {
     "type": "git",
@@ -35,6 +41,7 @@
     "@commitlint/config-conventional": "^19.8.1",
     "czg": "^1.12.0",
     "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
     "semantic-release": "^24.2.7"
   }
 }

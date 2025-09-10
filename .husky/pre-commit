@@ -1,2 +1,2 @@
-#!/bin/sh
-# exec < /dev/tty && npx czg --hook || true
+npx lint-staged
+exec < /dev/tty && npx czg --hook || true
