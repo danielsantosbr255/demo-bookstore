@@ -1,4 +1,4 @@
-import User from "../../common/models/User.js";
+import User from '../../common/models/User.js';
 
 export default class UsersRepository {
   async create(data) {

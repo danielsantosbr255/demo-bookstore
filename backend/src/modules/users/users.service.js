@@ -1,4 +1,4 @@
-import UsersRepository from "./users.repository.js";
+import UsersRepository from './users.repository.js';
 
 export default class UsersService {
   /** * @param {UsersRepository} repository */

@@ -1,7 +1,7 @@
 process.loadEnvFile();
 
-import { Pool } from "pg";
-import logger from "../../common/utils/logger.js";
+import { Pool } from 'pg';
+import logger from '../../common/utils/logger.js';
 
 class Database {
   constructor() {
@@ -17,7 +17,7 @@ class Database {
   async connect() {
     try {
       await this.db.connect();
-      logger.info("🏦 Database connected!");
+      logger.info('🏦 Database connected!');
     } catch (error) {
       logger.error(error);
     }
@@ -26,7 +26,7 @@ class Database {
   async disconnect() {
     try {
       await this.db.end();
-      logger.info("🏦 Database disconnected!");
+      logger.info('🏦 Database disconnected!');
     } catch (error) {
       logger.error(error);
     }

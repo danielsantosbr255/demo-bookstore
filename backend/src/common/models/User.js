@@ -1,13 +1,8 @@
-import BaseModel from "../../config/database/baseModel.js";
+import BaseModel from '../../config/database/baseModel.js';
 
 class UserModel extends BaseModel {
   constructor() {
-    super("users", {
-      id: "number",
-      name: "string",
-      email: "string",
-      password: "string",
-    });
+    super('users', { id: 'number', name: 'string', email: 'string', password: 'string' });
   }
 }
 

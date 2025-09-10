@@ -1,12 +1,8 @@
-import BaseModel from "../../config/database/baseModel.js";
+import BaseModel from '../../config/database/baseModel.js';
 
 class BrandModel extends BaseModel {
   constructor() {
-    super("brands", {
-      id: "number",
-      name: "string",
-      slug: "string",
-    });
+    super('brands', { id: 'number', name: 'string', slug: 'string' });
   }
 }
 

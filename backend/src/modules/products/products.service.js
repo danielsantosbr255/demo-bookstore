@@ -1,4 +1,4 @@
-import ProductRepository from "./products.repository.js";
+import ProductRepository from './products.repository.js';
 
 export default class ProductService {
   /** @param {ProductRepository} repository */
@@ -20,13 +20,13 @@ export default class ProductService {
 
   async update(id, data) {
     const product = await this.repository.getOne(id);
-    if (!product) throw new Error("Product not found!");
+    if (!product) throw new Error('Product not found!');
     return this.repository.update(id, data);
   }
 
   async delete(id) {
     const product = await this.repository.getOne(id);
-    if (!product) throw new Error("Product not found!");
+    if (!product) throw new Error('Product not found!');
     return this.repository.delete(id);
   }
 }

@@ -1,29 +1,29 @@
-import http from "http";
-import url from "url";
+import http from 'http';
+import url from 'url';
 
 class App {
   constructor() {
     this.routes = [];
   }
 
-  use(path, handler, method = "GET") {
+  use(path, handler, method = 'GET') {
     this.routes.push({ path, method, handler });
   }
 
   get(path, handler) {
-    this.use(path, handler, "GET");
+    this.use(path, handler, 'GET');
   }
 
   post(path, handler) {
-    this.use(path, handler, "POST");
+    this.use(path, handler, 'POST');
   }
 
   put(path, handler) {
-    this.use(path, handler, "PUT");
+    this.use(path, handler, 'PUT');
   }
 
   delete(path, handler) {
-    this.use(path, handler, "DELETE");
+    this.use(path, handler, 'DELETE');
   }
 
   listen(port, callback) {
@@ -36,7 +36,7 @@ class App {
       };
 
       res.json = function (data) {
-        res.setHeader("Content-Type", "application/json");
+        res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(data));
       };
 
@@ -44,12 +44,12 @@ class App {
         res.end(data);
       };
 
-      const route = this.routes.find((r) => r.path === parsedUrl.pathname && r.method === req.method);
+      const route = this.routes.find(r => r.path === parsedUrl.pathname && r.method === req.method);
 
       if (route) {
-        let body = "";
-        req.on("data", (chunk) => (body += chunk.toString()));
-        req.on("end", () => {
+        let body = '';
+        req.on('data', chunk => (body += chunk.toString()));
+        req.on('end', () => {
           try {
             req.body = body ? JSON.parse(body) : {};
           } catch {
@@ -60,7 +60,7 @@ class App {
           route.handler(req, res);
         });
       } else {
-        res.status(404).json({ error: "Not Found" });
+        res.status(404).json({ error: 'Not Found' });
       }
     });
 

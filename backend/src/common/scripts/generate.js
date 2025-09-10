@@ -1,15 +1,15 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
 const moduleName = process.argv[2];
 if (!moduleName) {
-  console.error("Informe o nome do módulo: node scripts/generate-module.js <nome>");
+  console.error('Informe o nome do módulo: node scripts/generate-module.js <nome>');
   process.exit(1);
 }
 
-const baseDir = path.join(__dirname, "..", "src", "modules", moduleName);
+const baseDir = path.join(__dirname, '..', 'src', 'modules', moduleName);
 if (fs.existsSync(baseDir)) {
-  console.error("Módulo já existe!");
+  console.error('Módulo já existe!');
   process.exit(1);
 }
 

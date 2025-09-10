@@ -1,4 +1,4 @@
-import Product from "../../common/models/Product.js";
+import Product from '../../common/models/Product.js';
 
 export default class ProductRepository {
   /** @param {Product} model */

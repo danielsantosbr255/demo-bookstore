@@ -1,12 +1,8 @@
-import BaseModel from "../../config/database/baseModel.js";
+import BaseModel from '../../config/database/baseModel.js';
 
 class CategoryModel extends BaseModel {
   constructor() {
-    super("categories", {
-      id: "number",
-      name: "string",
-      slug: "string",
-    });
+    super('categories', { id: 'number', name: 'string', slug: 'string' });
   }
 }
 
