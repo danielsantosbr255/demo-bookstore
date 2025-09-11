@@ -2,7 +2,6 @@
   "name": "study-bookstore",
   "version": "1.0.0",
   "description": "Repository to improve full stack skills with: TypeScript, NodeJS, ReactJS, SQL, Linux, Docker",
-  "main": "commitlint.config.js",
   "scripts": {
     "test": "echo Hello, world!",
     "prepare": "husky",
@@ -40,14 +39,14 @@
     "semantic-release": "^24.2.7"
   },
   "lint-staged": {
-    "backend/**/*.ts": [
-      "cd backend && eslint --fix",
-      "prettier --write --ignore-unknown ."
+    "./**/*.ts": [
+      "bash -c 'cd backend && npx eslint --fix'",
+      "bash -c 'cd backend && npx prettier --write --ignore-unknown .'"
     ]
   },
-  "config": {
-    "commitizen": {
-      "path": "czg"
-    }
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }

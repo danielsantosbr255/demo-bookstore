@@ -1,38 +1,47 @@
 {
   "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
+    /* Build Configuration */
     "rootDir": "./src",
     "outDir": "./dist",
     "target": "ES2023",
     "lib": ["ES2023"],
-    "module": "nodenext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    /* Module Resolution */
     "allowJs": true,
-    "sourceMap": true,
-    "skipLibCheck": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
+    "allowImportingTsExtensions": false,
+    "paths": { "@/*": ["./src/*"] },
+
+    /* Output Configuration */
+    "declaration": true,
+    "declarationDir": "./types",
+    "sourceMap": true,
+    "removeComments": true,
+
+    /* Compiler Options */
     "incremental": true,
+    "skipLibCheck": true,
+    "noErrorTruncation": true,
     "noImplicitOverride": true,
     "allowUnreachableCode": false,
 
-    "declaration": true,
-    "declarationDir": "./types",
-    "noErrorTruncation": true,
-
-    /* Linting */
+    /* Strict Type Checking */
     "strict": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "removeComments": true,
-    "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true,
-    "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
     "noPropertyAccessFromIndexSignature": true,
 
-    "paths": { "@/*": ["./src/*"] }
+    /* Code Quality */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "coverage", "**/__tests__", "**/*.spec.ts", "**/*.test.ts"]
