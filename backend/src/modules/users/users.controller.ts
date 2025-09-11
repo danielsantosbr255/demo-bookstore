@@ -1,32 +1,39 @@
+import { Request, Response } from 'express';
+
+import { UserCreate, UserUpdate } from './DTO/UsersDTO.js';
 import UsersService from './users.service.js';
 
 export default class UserController {
-  /**  @param {UsersService} service */
-  constructor(service) {
+  private service: UsersService;
+
+  constructor(service: UsersService) {
     this.service = service;
   }
 
-  create = async (req, res) => {
-    const { name, email, password } = req.body;
+  create = async (req: Request, res: Response) => {
+    const data: UserCreate = req.body;
+    const { name, email, password } = data;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'All fields are required!' });
     }
 
     const userExists = await this.service.getByEmail(email);
-    if (!userExists) return res.status(404).json({ message: 'User not found!' });
+    if (userExists) {
+      return res.status(409).json({ message: 'User already exists!' });
+    }
 
     const createdUser = await this.service.create({ name, email, password });
 
     res.status(201).json({ message: 'User created successfuly!', data: createdUser });
   };
 
-  getAll = async (req, res) => {
+  getAll = async (_: Request, res: Response) => {
     const users = await this.service.getMany();
     res.json({ message: 'All Users', data: users });
   };
 
-  getOne = async (req, res) => {
+  getOne = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const user = await this.service.getOne(id);
@@ -35,9 +42,10 @@ export default class UserController {
     res.json({ message: 'User', data: user });
   };
 
-  update = async (req, res) => {
+  update = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, email, password } = req.body;
+    const data: UserUpdate = req.body;
+    const { name, email, password } = data;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'All fields are required!' });
@@ -51,7 +59,7 @@ export default class UserController {
     res.json({ message: 'User updated successfuly!', data: updatedUser });
   };
 
-  delete = async (req, res) => {
+  delete = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const existsUser = await this.service.getOne(id);

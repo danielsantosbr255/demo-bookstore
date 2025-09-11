@@ -1,7 +1,8 @@
-import logger from './common/utils/logger.js';
-import UsersModule from './modules/users/users.module.js';
-import ProductsModule from './modules/products/products.module.js';
 import { Application, Router } from 'express';
+
+import logger from './common/utils/logger.js';
+import ProductsModule from './modules/products/products.module.js';
+import UsersModule from './modules/users/users.module.js';
 
 interface ModuleI {
   name: string;

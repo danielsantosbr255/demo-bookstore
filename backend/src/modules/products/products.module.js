@@ -1,7 +1,8 @@
 import express from 'express';
-import ProductService from './products.service.js';
-import ProductRepository from './products.repository.js';
+
 import ProductsController from './products.controller.js';
+import ProductRepository from './products.repository.js';
+import ProductService from './products.service.js';
 
 export default class ProductsModule {
   constructor() {

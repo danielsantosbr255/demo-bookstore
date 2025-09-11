@@ -1,7 +1,8 @@
 import express from 'express';
-import UsersService from './users.service.js';
+
 import UsersController from './users.controller.js';
 import UsersRepository from './users.repository.js';
+import UsersService from './users.service.js';
 
 export default class UsersModule {
   constructor() {

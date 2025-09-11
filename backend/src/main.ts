@@ -1,9 +1,10 @@
 import cors from 'cors';
 import express from 'express';
+
 import AppModule from './app.module.js';
+import errorHandler from './common/middlewares/error.handler.js';
 import logger from './common/utils/logger.js';
 import database from './config/database/database.js';
-import errorHandler from './common/middlewares/error.handler.js';
 
 async function bootstrap() {
   const app = express();
