@@ -8,12 +8,6 @@
     "prepare": "husky",
     "cz": "czg"
   },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --write --ignore-unknown"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/danielsantosbr255/study-bookstore.git"

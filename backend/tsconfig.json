@@ -1,34 +1,38 @@
 {
+  "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
-    "rootDir": "./src", // Root directory of input files
-    "outDir": "./dist", // Output directory for compiled files
-    "target": "ES2022", // Specifies the ECMAScript target version
-    "lib": ["ES2023"], // Specifies the library files to be included in the compilation.
-    "allowJs": true, // Allows JavaScript files to be compiled alongside TypeScript files.
-    // "checkJs": true,
-    "skipLibCheck": true, // Skips type checking of declaration files
-    "strict": true, // Enables all strict type-checking options (best practice)
-    // "noEmit": true,
-    "removeComments": true,
-    "esModuleInterop": true, // Enables compatibility with CommonJS modules, allowing default imports from modules with no default export.
-    "resolveJsonModule": true, // Allows importing JSON files as modules
-    "module": "nodenext", // Sets the module system to use (commonjs, nodenext, esnext)
-    "incremental": true, // Enables incremental compilation, build only the changed code
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "nodenext",
+    "allowJs": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "incremental": true,
+    "noImplicitOverride": true,
+    "allowUnreachableCode": false,
+
+    "declaration": true,
+    "declarationDir": "./types",
+    "noErrorTruncation": true,
+
+    /* Linting */
+    "strict": true,
     "noImplicitAny": true,
-    "sourceMap": true, // Generates source maps for debugging
-    "noUnusedLocals": false, // Similar to noUnusedParameters, but for local variables.
-    "noUnusedParameters": false, // Do not allow unused parameters in functions.
-    "noUncheckedIndexedAccess": true, // it ensures that indexed access types are checked for undefined values,
-    "forceConsistentCasingInFileNames": true, // Ensures that file names are treated with consistent casing, which is important for cross-platform compatibility.,
-    "noImplicitOverride": true, // This option requires that any method in a subclass that overrides a method in a superclass must explicitly use the override keyword.
-    "noPropertyAccessFromIndexSignature": true, // This setting enforces that properties accessed via dot notation must be explicitly defined in the type.
-    "allowUnreachableCode": false, // When set to false, this option raises errors for code that is unreachable, meaning it cannot be executed.
-    "noFallthroughCasesInSwitch": true, // This option reports errors for switch statement cases that fall through without a break, return, or throw statement.
-    "noErrorTruncation": true, // When enabled, this option prevents TypeScript from truncating error messages, providing full details about the error.
-    "declaration": true, // Generates corresponding .d.ts file
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "noUnusedLocals": true,
+    "removeComments": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+    "noPropertyAccessFromIndexSignature": true,
+
+    "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "coverage", "**/__tests__", "**/*.spec.ts", "**/*.test.ts"]
