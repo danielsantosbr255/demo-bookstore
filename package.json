@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo Hello, world!",
     "prepare": "husky",
-    "cz": "czg"
+    "cz": "czg",
+    "commit": "npx czg"
   },
   "repository": {
     "type": "git",
@@ -43,5 +44,10 @@
       "cd backend && eslint --fix",
       "prettier --write --ignore-unknown ."
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "czg"
+    }
   }
 }
