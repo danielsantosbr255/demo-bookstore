@@ -1,5 +1,9 @@
-npx lint-staged
+# Run lint-staged only if there are staged files
+if [ -n "$(git diff --cached --name-only)" ]; then
+  npx lint-staged
+fi
 
+# Skip czg when running from Git extension (no TTY available)
 if [ -t 0 ]; then
-  npx czg --hook
+  exec < /dev/tty && npx czg --hook || true
 fi

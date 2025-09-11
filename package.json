@@ -37,5 +37,11 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.6",
     "semantic-release": "^24.2.7"
+  },
+  "lint-staged": {
+    "backend/**/*.ts": [
+      "cd backend && eslint --fix",
+      "prettier --write --ignore-unknown ."
+    ]
   }
 }
