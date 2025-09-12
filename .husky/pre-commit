@@ -1,3 +1,1 @@
-if [ -n "$(git diff --cached --name-only)" ]; then
-  npx lint-staged --no-revert
-fi
+npx lint-staged --no-revert

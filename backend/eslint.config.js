@@ -1,8 +1,7 @@
 import js from '@eslint/js';
-import pluginTypescript from '@typescript-eslint/eslint-plugin';
 import pluginImport from 'eslint-plugin-import';
 import pluginJest from 'eslint-plugin-jest';
-import pluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import pluginPrettierRecomended from 'eslint-plugin-prettier/recommended';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -10,13 +9,13 @@ import tseslint from 'typescript-eslint';
 export default defineConfig([
   tseslint.configs.strict,
   tseslint.configs.stylistic,
+  tseslint.configs.recommended,
   globalIgnores(['dist', '**/*.js']),
   {
     name: 'main',
     files: ['**/*.ts', '**/*.mts', '**/*.cts'],
     plugins: {
       js,
-      pluginTypescript,
       import: pluginImport,
     },
     languageOptions: { globals: globals.node },
@@ -27,7 +26,6 @@ export default defineConfig([
       'import/newline-after-import': 'warn',
     },
   },
-
   {
     name: 'tests',
     files: ['**/*.spec.ts', '**/*.test.ts'],
@@ -43,7 +41,5 @@ export default defineConfig([
       'jest/valid-expect': 'error',
     },
   },
-
-  tseslint.configs.recommended,
-  pluginPrettierRecommended,
+  pluginPrettierRecomended,
 ]);
