@@ -1,17 +1,13 @@
 import { Request, Response } from 'express';
 
-import { UserCreate, UserUpdate } from './DTO/UsersDTO.js';
-import UsersService from './users.service.js';
+import { User } from './DTO/User.js';
+import UserService from './users.service';
 
 export default class UserController {
-  private service: UsersService;
-
-  constructor(service: UsersService) {
-    this.service = service;
-  }
+  constructor(readonly service: UserService) {}
 
   create = async (req: Request, res: Response) => {
-    const data: UserCreate = req.body;
+    const data: User = req.body;
     const { name, email, password } = data;
 
     if (!name || !email || !password) {
@@ -34,7 +30,14 @@ export default class UserController {
   };
 
   getOne = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const params = req.params;
+
+    if (!params.id) return res.status(400).json({ message: 'User ID is required!' });
+    const id = parseInt(params.id);
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid user ID!' });
+    }
 
     const user = await this.service.getOne(id);
     if (!user) return res.status(404).json({ message: 'User not found!' });
@@ -44,17 +47,27 @@ export default class UserController {
 
   update = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const data: UserUpdate = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: 'User ID is required!' });
+    }
+
+    const userId = parseInt(id);
+    const data: User = req.body;
     const { name, email, password } = data;
+
+    if (isNaN(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID!' });
+    }
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'All fields are required!' });
     }
 
-    const user = await this.service.getOne(id);
+    const user = await this.service.getOne(userId);
     if (!user) return res.status(404).json({ message: 'User not found!' });
 
-    const updatedUser = await this.service.update(id, { name, email, password });
+    const updatedUser = await this.service.update(userId, { name, email, password });
 
     res.json({ message: 'User updated successfuly!', data: updatedUser });
   };
@@ -62,10 +75,20 @@ export default class UserController {
   delete = async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const existsUser = await this.service.getOne(id);
+    if (!id) {
+      return res.status(400).json({ message: 'User ID is required!' });
+    }
+
+    const userId = parseInt(id);
+
+    if (isNaN(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID!' });
+    }
+
+    const existsUser = await this.service.getOne(userId);
     if (!existsUser) return res.status(404).json({ message: 'User not found!' });
 
-    const user = await this.service.delete(id);
+    const user = await this.service.delete(userId);
     res.json({ message: 'User deleted successfuly!', data: user });
   };
 }

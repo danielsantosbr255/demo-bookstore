@@ -1,10 +1,9 @@
 import cors from 'cors';
 import express from 'express';
-
 import AppModule from './app.module';
 import errorHandler from './common/middlewares/error.handler.js';
 import logger from './common/utils/logger.js';
-import database from './config/database/database.js';
+import database from './config/database/client';
 
 async function bootstrap() {
   const app = express();
@@ -30,4 +29,3 @@ bootstrap().catch(err => {
   logger.error('❌ Bootstrap error:', err);
   process.exit(1);
 });
-// Test comment

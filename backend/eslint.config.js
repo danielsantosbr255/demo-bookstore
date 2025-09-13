@@ -22,7 +22,7 @@ export default defineConfig([
     rules: {
       'no-unused-vars': 'off',
       'import/first': 'warn',
-      'import/order': 'warn',
+      // 'import/order': 'warn',
       'import/newline-after-import': 'warn',
     },
   },

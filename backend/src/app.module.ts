@@ -1,14 +1,11 @@
 import { Application, Router } from 'express';
 
 import logger from './common/utils/logger.js';
-import ProductsModule from './modules/products/products.module.js';
-import UsersModule from './modules/users/users.module.js';
+// import ProductsModule from './modules/products/products.module';
+import UsersModule from './modules/users/users.module';
 
 interface ModuleI {
   name: string;
-  repository: unknown;
-  service: unknown;
-  controller: unknown;
   router: Router;
 }
 
@@ -18,7 +15,7 @@ export default class AppModule {
 
   constructor() {
     this.prefix = '/api/v1';
-    this.modules = [UsersModule.create(), ProductsModule.create()];
+    this.modules = [UsersModule.create()];
   }
 
   init(app: Application) {
