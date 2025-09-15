@@ -10,7 +10,10 @@ export default defineConfig([
   tseslint.configs.strict,
   tseslint.configs.stylistic,
   tseslint.configs.recommended,
+  pluginPrettierRecomended,
+
   globalIgnores(['dist', '**/*.js']),
+
   {
     name: 'main',
     files: ['**/*.ts', '**/*.mts', '**/*.cts'],
@@ -22,7 +25,6 @@ export default defineConfig([
     rules: {
       'no-unused-vars': 'off',
       'import/first': 'warn',
-      // 'import/order': 'warn',
       'import/newline-after-import': 'warn',
     },
   },
@@ -41,5 +43,4 @@ export default defineConfig([
       'jest/valid-expect': 'error',
     },
   },
-  pluginPrettierRecomended,
 ]);
