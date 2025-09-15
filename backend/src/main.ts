@@ -1,9 +1,9 @@
 import cors from 'cors';
 import express from 'express';
 import AppModule from './app.module';
-import errorHandler from './common/middlewares/error.handler.js';
-import logger from './common/utils/logger.js';
-import database from './config/database/client';
+import errorHandler from './common/middlewares/error.handler';
+import logger from './common/utils/logger';
+import { initDb } from './config/database/client';
 
 async function bootstrap() {
   const app = express();
@@ -11,7 +11,7 @@ async function bootstrap() {
   app.use(express.json());
   app.use(cors());
 
-  await database.connect();
+  await initDb();
 
   const appModule = new AppModule();
   appModule.init(app);

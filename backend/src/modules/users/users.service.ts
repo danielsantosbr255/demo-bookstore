@@ -1,12 +1,14 @@
-import { User } from './DTO/User.js';
+import { User } from './dto/User.js';
 import UserRepository from './users.repository.js';
 
 export default class UsersService {
-  constructor(readonly repository: UserRepository) {}
+  constructor(private readonly repository: UserRepository) {}
 
   async create(data: User) {
-    const user = new User(data.name, data.email, data.password);
-    return this.repository.create(user);
+    const userExists = await this.repository.findByEmail(data.email);
+    if (userExists) throw new Error('User already exists!');
+
+    return this.repository.create(data);
   }
 
   async getMany() {
@@ -22,10 +24,16 @@ export default class UsersService {
   }
 
   async update(id: number, data: User) {
+    const user = await this.repository.findById(id);
+    if (!user) throw new Error('User not found!');
+
     return this.repository.update(id, data);
   }
 
   async delete(id: number) {
+    const user = await this.repository.findById(id);
+    if (!user) throw new Error('User not found!');
+
     return this.repository.delete(id);
   }
 }

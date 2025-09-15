@@ -1,27 +1,17 @@
 import express from 'express';
 
-import IDatabase from '@/config/database/IDatabase';
-import database from '../../config/database/client';
-import { User } from './DTO/User';
+import { getDb } from '../../config/database/client';
 import UsersController from './users.controller';
 import UserRepository from './users.repository';
 import UsersService from './users.service';
 
 export default class UsersModule {
-  public readonly name: string = 'users';
-  public readonly router: express.Router;
+  public readonly name = 'users';
 
-  private readonly repository: UserRepository;
-  private readonly service: UsersService;
-  private readonly controller: UsersController;
-
-  constructor() {
-    this.name = 'users';
-    this.repository = new UserRepository(database as IDatabase<User>);
-    this.service = new UsersService(this.repository);
-    this.controller = new UsersController(this.service);
-    this.router = this._buildRouter();
-  }
+  private readonly repository = new UserRepository(getDb());
+  private readonly service = new UsersService(this.repository);
+  private readonly controller = new UsersController(this.service);
+  public readonly router = this._buildRouter();
 
   _buildRouter() {
     const router = express.Router();
@@ -39,4 +29,3 @@ export default class UsersModule {
     return new UsersModule();
   }
 }
-// .bind(this.controller)
