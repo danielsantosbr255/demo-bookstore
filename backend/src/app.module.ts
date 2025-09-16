@@ -1,30 +1,32 @@
-import { Application, Router } from 'express';
-
-import logger from './common/utils/logger.js';
-// import ProductsModule from './modules/products/products.module';
+import express, { Application } from 'express';
+import { AppController } from './app.controller';
+import logger from './common/utils/logger';
+import { IModuleConstructor } from './config/core/IModule';
+import ProductsModule from './modules/products/products.module';
 import UsersModule from './modules/users/users.module';
 
-interface ModuleI {
-  name: string;
-  router: Router;
-}
-
 export default class AppModule {
-  prefix: string;
-  modules: ModuleI[];
+  public readonly name = '/api/v1';
+  public readonly router = express.Router();
 
-  constructor() {
-    this.prefix = '/api/v1';
-    this.modules = [UsersModule.create()];
+  private readonly modules: IModuleConstructor[] = [UsersModule, ProductsModule];
+  private readonly controller = new AppController();
+
+  constructor(public app: Application) {
+    this.init(app);
   }
 
   init(app: Application) {
+    this.router.get('/', this.controller.getHello);
+
     for (const mod of this.modules) {
-      const path = `${this.prefix}/${mod.name}`;
-      app.use(path, mod.router);
-      logger.info(`📝 Registered module '${mod.name}' at ${path}`);
+      const module = mod.create();
+      const path = `/${module.name}`;
+      this.router.use(path, module.router);
+      logger.info(`📝 Registered module '${module.name}' at ${this.name}${path}`);
     }
 
+    app.use(this.name, this.router);
     app.use((_, res) => res.status(404).json({ message: 'Route not found!' }));
   }
 }
