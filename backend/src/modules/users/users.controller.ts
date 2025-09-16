@@ -7,7 +7,7 @@ export default class UserController {
   constructor(private readonly service: UserService) {}
 
   create = async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body as User;
 
     const user = new User(name, email, password);
 
@@ -25,19 +25,25 @@ export default class UserController {
     const params = req.params;
     if (!params.id) throw new Error('User ID is required!');
 
-    const user = await this.service.getOne(parseInt(params.id));
+    const id = parseInt(params.id);
+    if (isNaN(id)) throw new Error('User ID must be a valid number!');
+
+    const user = await this.service.getOne(id);
 
     res.json({ message: 'User', data: user });
   };
 
   update = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { name, email, password } = req.body;
+    const { id } = req.params as { id: string };
+    const { name, email, password } = req.body as User;
 
     if (!id) throw new Error('User ID is required!');
 
+    const userId = parseInt(id);
+    if (isNaN(userId)) throw new Error('User ID must be a valid number!');
+
     const user = new User(name, email, password);
-    const updatedUser = await this.service.update(parseInt(id), user);
+    const updatedUser = await this.service.update(userId, user);
 
     res.json({ message: 'User updated successfuly!', data: updatedUser });
   };
@@ -46,7 +52,10 @@ export default class UserController {
     const { id } = req.params;
     if (!id) throw new Error('User ID is required!');
 
-    const user = await this.service.delete(parseInt(id));
+    const userId = parseInt(id);
+    if (isNaN(userId)) throw new Error('User ID must be a valid number!');
+
+    const user = await this.service.delete(userId);
 
     res.json({ message: 'User deleted successfuly!', data: user });
   };
