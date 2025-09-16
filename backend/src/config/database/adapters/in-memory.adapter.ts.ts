@@ -13,7 +13,7 @@ class MemoryTable<T> implements ITable<T> {
     const where = object.where;
     const keys = Object.keys(where) as (keyof T)[];
     const row = this.rows.find(r => keys.every(key => r[key] === where[key]));
-    return row || null;
+    return row ?? null;
   }
 
   async findMany() {
@@ -63,7 +63,7 @@ export class MemoryAdapter implements IDatabase {
   }
 
   table<T>(name: string) {
-    if (!this.tables[name]) this.tables[name] = new MemoryTable<T>();
+    this.tables[name] ??= new MemoryTable<T>();
     return this.tables[name] as ITable<T>;
   }
 }

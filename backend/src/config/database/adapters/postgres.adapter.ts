@@ -57,7 +57,7 @@ class PostgresTable<T> implements ITable<T> {
     const query = `SELECT * FROM ${this.table} WHERE ${conditions} LIMIT 1`;
     const { rows } = await this.pool.query(query, values);
 
-    return rows[0] || null;
+    return rows[0] ?? null;
   }
 
   async update(object: { where: object; data: object }) {
@@ -84,7 +84,7 @@ class PostgresTable<T> implements ITable<T> {
     `;
 
     const { rows } = await this.pool.query(query, [...setValues, ...whereValues]);
-    return rows[0] || null;
+    return rows[0] ?? null;
   }
 
   async delete(object: { where?: object }) {
@@ -99,7 +99,7 @@ class PostgresTable<T> implements ITable<T> {
     const query = `DELETE FROM ${this.table} WHERE ${conditions} RETURNING *`;
     const { rows } = await this.pool.query(query, values);
 
-    return rows[0] || null;
+    return rows[0] ?? null;
   }
 
   async count() {
