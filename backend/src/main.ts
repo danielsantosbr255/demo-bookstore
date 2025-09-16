@@ -1,5 +1,3 @@
-import cors from 'cors';
-import express from 'express';
 import AppModule from './app.module';
 import errorHandler from './common/middlewares/error.handler';
 import logger from './common/utils/logger';
@@ -10,9 +8,6 @@ const bootstrap = async () => {
   await initDb();
 
   const app = createApp(AppModule);
-
-  app.use(express.json());
-  app.use(cors());
 
   app.use(errorHandler);
 
