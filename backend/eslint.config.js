@@ -7,9 +7,12 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  tseslint.configs.strict,
-  tseslint.configs.stylistic,
   tseslint.configs.recommended,
+  tseslint.configs.stylistic,
+
+  // tseslint.configs.strictTypeChecked,
+  tseslint.configs.stylisticTypeChecked,
+
   pluginPrettierRecomended,
 
   globalIgnores(['dist', '**/*.js']),
@@ -21,7 +24,13 @@ export default defineConfig([
       js,
       import: pluginImport,
     },
-    languageOptions: { globals: globals.node },
+    languageOptions: {
+      globals: globals.node,
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     rules: {
       'no-unused-vars': 'off',
       'import/first': 'warn',
