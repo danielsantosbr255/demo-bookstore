@@ -1,10 +1,11 @@
-class CustomError extends Error {
+export class CustomError extends Error {
   constructor(
     public override message: string,
     public statusCode: number
   ) {
-    super();
+    super(message);
+    this.statusCode = statusCode;
+
+    Error.captureStackTrace(this, this.constructor);
   }
 }
-
-export default CustomError;
