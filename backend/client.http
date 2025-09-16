@@ -1,6 +1,10 @@
 @HOST = http://localhost:5000/api/v1
 
 GET {{HOST}}/users
+###
+GET {{HOST}}/users/6
+###
+DELETE {{HOST}}/users/2
 
 ###
 POST {{HOST}}/users
@@ -20,4 +24,23 @@ Content-Type: application/json
   "name": "John Doe",
   "email": "john@email.com",
   "password": "1231fgasd"
+}
+
+###
+POST {{HOST}}/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "john@email.com",
+  "password": "123123"
+}
+
+###
+POST {{HOST}}/auth/sign-up
+Content-Type: application/json
+
+{
+  "name": "Pedro",
+  "email": "pedro@email.com",
+  "password": "123123"
 }
