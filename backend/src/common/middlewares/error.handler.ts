@@ -21,7 +21,7 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
 
   if (err instanceof CustomError) {
     res.status(err.statusCode).json({ message: err.message, statusCode: err.statusCode });
-    return next();
+    next();
   }
 
   res.status(500).json({ message: err.message, statusCode: 500 });
