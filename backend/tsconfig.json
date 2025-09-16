@@ -1,13 +1,13 @@
 {
-  "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
     /* Build Configuration */
     "rootDir": "./src",
     "outDir": "./dist",
     "target": "ES2023",
     "lib": ["ES2023"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
 
     /* Module Resolution */
     "allowJs": true,
@@ -36,7 +36,6 @@
     "noUncheckedSideEffectImports": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
-    // "noPropertyAccessFromIndexSignature": true,
 
     /* Code Quality */
     "noUnusedLocals": true,
@@ -44,5 +43,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "coverage", "**/__tests__", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": ["node_modules", "dist", "coverage"]
 }
