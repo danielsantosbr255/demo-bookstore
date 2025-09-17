@@ -1,3 +1,5 @@
+import 'express';
+
 declare global {
   namespace Express {
     interface Request {
@@ -5,7 +7,6 @@ declare global {
         userId: number;
         browser: string;
       };
-
       userId?: number;
     }
   }

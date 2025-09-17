@@ -1,10 +1,10 @@
-import { User } from './dto/User.js';
+import { UserProps, UserUpdateProps } from './dto/User.js';
 import UserRepository from './users.repository.js';
 
 export default class UsersService {
   constructor(private readonly repository: UserRepository) {}
 
-  async create(data: User) {
+  async create(data: UserProps) {
     const userExists = await this.repository.findByEmail(data.email);
     if (userExists) throw new Error('User already exists!');
 
@@ -23,7 +23,7 @@ export default class UsersService {
     return this.repository.findByEmail(email);
   }
 
-  async update(id: number, data: User) {
+  async update(id: number, data: UserUpdateProps) {
     const user = await this.repository.findById(id);
     if (!user) throw new Error('User not found!');
 
