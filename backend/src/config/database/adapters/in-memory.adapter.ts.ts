@@ -4,13 +4,13 @@ import { IDatabase, ITable } from '../IDatabase';
 class MemoryTable<T> implements ITable<T> {
   private rows: T[] = [];
 
-  async create(object: { data: T }): Promise<T> {
-    this.rows.push(object.data);
-    return object.data;
+  async create(args: { data: T }): Promise<T> {
+    this.rows.push(args.data);
+    return args.data;
   }
 
-  async findUnique(object: { where: Partial<T> }) {
-    const where = object.where;
+  async findUnique(args: { where: Partial<T> }) {
+    const where = args.where;
     const keys = Object.keys(where) as (keyof T)[];
     const row = this.rows.find(r => keys.every(key => r[key] === where[key]));
     return row ?? null;
@@ -20,9 +20,9 @@ class MemoryTable<T> implements ITable<T> {
     return this.rows;
   }
 
-  async update(object: { where: Partial<T>; data: Partial<T> }) {
-    const where = object.where;
-    const data = object.data;
+  async update(args: { where: Partial<T>; data: Partial<T> }) {
+    const where = args.where;
+    const data = args.data;
     const keys = Object.keys(where) as (keyof T)[];
     const rowIndex = this.rows.findIndex(r => keys.every(key => r[key] === where[key]));
 
@@ -33,8 +33,8 @@ class MemoryTable<T> implements ITable<T> {
     return updatedRow;
   }
 
-  async delete(object: { where: Partial<T> }) {
-    const where = object.where;
+  async delete(args: { where: Partial<T> }) {
+    const where = args.where;
     const keys = Object.keys(where) as (keyof T)[];
     const rowIndex = this.rows.findIndex(r => keys.every(key => r[key] === where[key]));
 
