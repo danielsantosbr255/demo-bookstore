@@ -4,17 +4,7 @@ GET {{HOST}}/users
 ###
 GET {{HOST}}/users/6
 ###
-DELETE {{HOST}}/users/2
-
-###
-POST {{HOST}}/users
-Content-Type: application/json
-
-{
-  "name": "Jane Doe",
-  "email": "jane@email.com",
-  "password": "aslçdfnaweio"
-}
+DELETE {{HOST}}/users/1
 
 ###
 POST {{HOST}}/users
@@ -27,15 +17,16 @@ Content-Type: application/json
 }
 
 ###
-POST {{HOST}}/auth/sign-in
+POST {{HOST}}/users
 Content-Type: application/json
 
 {
-  "email": "john@email.com",
-  "password": "123123"
+  "name": "Jane Doe",
+  "email": "jane@email.com",
+  "password": "aslçdfnaweio"
 }
 
-###
+### ------ SIGN-UP ------ ###
 POST {{HOST}}/auth/sign-up
 Content-Type: application/json
 
@@ -44,3 +35,23 @@ Content-Type: application/json
   "email": "pedro@email.com",
   "password": "123123"
 }
+###
+POST {{HOST}}/auth/sign-up
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@email.com",
+  "password": "123123"
+}
+
+
+### ------ SIGN-IN ------ ###
+POST {{HOST}}/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "john@email.com",
+  "password": "123123"
+}
+
