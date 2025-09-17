@@ -39,9 +39,9 @@
     "semantic-release": "^24.2.7"
   },
   "lint-staged": {
-    "./**/*.ts": [
-      "bash -c 'cd backend && npx eslint --fix'",
-      "bash -c 'cd backend && npx prettier --write --ignore-unknown .'"
+    "backend/**/*.ts": [
+      "npm --prefix backend run lint:fix",
+      "npm --prefix backend run prettier:fix"
     ]
   },
   "commitlint": {
