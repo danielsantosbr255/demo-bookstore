@@ -13,7 +13,7 @@
     "prettier:fix": "prettier --write --ignore-unknown",
     "lint:check": "eslint --max-warnings 0",
     "test": "jest",
-    "migrate": "node --env-file=.env ./src/config/database/migrate.js"
+    "migrate": "tsx --env-file=.env ./src/config/database/postgres/migrate.ts"
   },
   "keywords": [],
   "author": "",
