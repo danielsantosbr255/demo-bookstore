@@ -1,20 +1,22 @@
-import AppModule from './app.module';
-import errorHandler from './common/middlewares/error.handler';
+import { AppModule } from './app.module';
 import logger from './common/utils/logger';
-import { createApp } from './config/core/Factory';
-import { initDb } from './config/database/client';
+import { createApp } from './config/core/AppFactory';
+import { initDb } from './config/database';
 
 const bootstrap = async () => {
   await initDb();
 
   const app = createApp(AppModule);
 
-  app.use(errorHandler);
-
   const PORT = process.env.PORT ?? 5000;
 
-  app.listen(PORT, () => {
-    logger.info(`🚀 Server running: http://localhost:${PORT.toString()}/api/v1`);
+  const server = app.listen(PORT, () => {
+    logger.info(`🚀 Server running: http://localhost:${PORT}/api/v1`);
+  });
+
+  server.on('error', err => {
+    logger.error('❌ Server failed to start:', err);
+    process.exit(1);
   });
 };
 

@@ -4,4 +4,8 @@ export class AppController {
   getHello = (_: Request, res: Response) => {
     res.status(200).json({ message: 'Hello, world!' });
   };
+
+  getHealth = (_: Request, res: Response) => {
+    res.status(200).json({ message: 'OK' });
+  };
 }

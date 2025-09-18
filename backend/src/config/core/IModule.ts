@@ -1,11 +1,10 @@
-import express from 'express';
+import type { Router } from 'express';
 
 export interface IModule {
-  readonly name: string;
-  router: express.Router;
-}
-
-export interface IModuleConstructor {
-  new (router: express.Router): IModule;
-  create(): IModule;
+  name: string;
+  router: Router;
+  imports?: (new () => IModule)[];
+  controller?: object;
+  service?: object;
+  repository?: object;
 }
