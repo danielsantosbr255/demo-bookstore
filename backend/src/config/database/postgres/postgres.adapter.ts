@@ -110,14 +110,14 @@ class PostgresTable<T> implements ITable<T> {
 }
 
 export class PostgresAdapter implements IDatabase {
-  private pool: Pool;
+  public pool: Pool;
 
   constructor(config: object) {
     this.pool = new Pool(config);
   }
 
   async connect() {
-    await this.pool.connect();
+    await this.pool.query('SELECT 1');
     logger.info('✅ PostgreSQL conectado');
   }
 
