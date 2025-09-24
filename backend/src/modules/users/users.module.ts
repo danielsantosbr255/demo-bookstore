@@ -8,7 +8,7 @@ import UsersService from './users.service';
 
 export class UsersModule implements IModule {
   readonly name = 'users';
-  readonly router = Router();
+  readonly router: Router = Router();
 
   readonly repository = new UserRepository(getDb());
   readonly service = new UsersService(this.repository);

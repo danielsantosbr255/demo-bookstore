@@ -7,7 +7,7 @@ import { UsersModule } from './modules/users/users.module';
 
 export class AppModule implements IModule {
   readonly name = '/';
-  readonly router = Router();
+  readonly router: Router = Router();
 
   readonly imports = [UsersModule, ProductsModule, AuthModule];
   readonly controller = new AppController();

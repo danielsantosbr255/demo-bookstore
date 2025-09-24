@@ -8,7 +8,7 @@ import ProductService from './products.service.js';
 
 export class ProductsModule implements IModule {
   public name = 'products';
-  public router = Router();
+  public router: Router = Router();
 
   readonly repository = new IProductRepository(getDb());
   readonly service = new ProductService(this.repository);

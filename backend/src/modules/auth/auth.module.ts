@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 
 export class AuthModule implements IModule {
   readonly name = 'auth';
-  readonly router = Router();
+  readonly router: Router = Router();
 
   readonly repository = new UserRepository(getDb());
   readonly service = new AuthService(this.repository);
