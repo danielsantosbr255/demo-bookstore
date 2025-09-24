@@ -1,25 +1,31 @@
 {
-  "name": "study-bookstore",
+  "name": "demo-bookstore",
   "version": "1.0.0",
   "description": "Repository to improve full stack skills with: TypeScript, NodeJS, ReactJS, SQL, Linux, Docker",
+  "keywords": [
+    "typescript",
+    "nodejs",
+    "reactjs",
+    "sql",
+    "linux",
+    "docker"
+  ],
+  "author": "Daniel Santos",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.0",
   "scripts": {
     "test": "echo Hello, world!",
     "prepare": "husky",
-    "cz": "czg",
     "commit": "npx czg"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danielsantosbr255/study-bookstore.git"
+    "url": "git+https://github.com/danielsantosbr255/demo-bookstore.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
   "bugs": {
-    "url": "https://github.com/danielsantosbr255/study-bookstore/issues"
+    "url": "https://github.com/danielsantosbr255/demo-bookstore/issues"
   },
-  "homepage": "https://github.com/danielsantosbr255/study-bookstore#readme",
+  "homepage": "https://github.com/danielsantosbr255/demo-bookstore#readme",
   "release": {
     "branches": [
       "main"
@@ -40,8 +46,8 @@
   },
   "lint-staged": {
     "backend/**/*.ts": [
-      "npm --prefix backend run lint:fix",
-      "npm --prefix backend run prettier:fix"
+      "pnpm --prefix backend run lint:fix",
+      "pnpm --prefix backend run prettier:fix"
     ]
   },
   "commitlint": {
