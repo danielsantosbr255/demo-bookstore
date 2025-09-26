@@ -1,6 +1,7 @@
 import { AppModule } from './app.module';
 import logger from './common/utils/logger';
 import { createApp } from './config/core/AppFactory';
+import { config } from './config/core/config';
 import { initDb } from './config/database';
 
 const bootstrap = async () => {
@@ -8,10 +9,8 @@ const bootstrap = async () => {
 
   const app = createApp(AppModule);
 
-  const PORT = process.env.PORT ?? 5000;
-
-  const server = app.listen(PORT, () => {
-    logger.info(`🚀 Server running: http://localhost:${PORT}/api/v1`);
+  const server = app.listen(config.port, () => {
+    logger.info(`🚀 Server running: http://localhost:${config.port}/api/v1`);
   });
 
   server.on('error', err => {
