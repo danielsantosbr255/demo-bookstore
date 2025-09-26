@@ -8,10 +8,10 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   tseslint.configs.recommended,
-  tseslint.configs.stylistic,
+  // tseslint.configs.stylistic,
 
   // tseslint.configs.strictTypeChecked,
-  tseslint.configs.stylisticTypeChecked,
+  // tseslint.configs.stylisticTypeChecked,
 
   pluginPrettierRecomended,
 
@@ -37,6 +37,7 @@ export default defineConfig([
       'import/newline-after-import': 'warn',
     },
   },
+
   {
     name: 'tests',
     files: ['**/*.spec.ts', '**/*.test.ts'],
