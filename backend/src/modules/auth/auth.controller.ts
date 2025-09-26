@@ -1,20 +1,17 @@
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import { AuthDTO } from './dto/auth.dto';
 
 export class AuthController {
   constructor(private readonly service: AuthService) {}
 
   signUp = async (req: Request, res: Response) => {
-    const user = AuthDTO.signUp(req.body);
-    const createdUser = await this.service.signUp(user);
-
+    const createdUser = await this.service.signUp(req.body);
     res.status(201).json({ message: 'User created successfuly!', data: createdUser });
   };
 
   signIn = async (req: Request, res: Response) => {
-    const user = AuthDTO.signIn(req.body);
-    const userLogged = await this.service.signIn(user);
+    const { email, password } = req.body;
+    const userLogged = await this.service.signIn({ email, password });
 
     res.cookie('userId', userLogged.id, {
       httpOnly: true,
@@ -28,7 +25,7 @@ export class AuthController {
 
   signOut = async (req: Request, res: Response) => {
     const { id } = req.params as { id: string };
-    const user = this.service.signOut({ id: parseInt(id) });
+    const user = this.service.signOut({ id });
 
     res.clearCookie('userId');
 

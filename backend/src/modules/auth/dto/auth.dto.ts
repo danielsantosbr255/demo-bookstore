@@ -1,11 +1,11 @@
-import { UserProps } from '@/modules/users/dto/User';
+import { User } from '@/modules/users/entities/user.entity';
 
-export type SignInDTO = Pick<UserProps, 'email' | 'password'>;
-export type SignUpDTO = Omit<UserProps, 'id'>;
-export type SignOutDTO = Pick<UserProps, 'id'>;
+export type SignInDTO = Pick<User, 'email' | 'password'>;
+export type SignUpDTO = Omit<User, 'id'>;
+export type SignOutDTO = Pick<User, 'id'>;
 
 export class AuthDTO {
-  static signUp(data: UserProps) {
+  static signUp(data: User) {
     return {
       email: data.email,
       name: data.name,
@@ -13,14 +13,14 @@ export class AuthDTO {
     };
   }
 
-  static signIn(data: Pick<UserProps, 'email' | 'password'>) {
+  static signIn(data: Pick<User, 'email' | 'password'>) {
     return {
       email: data.email,
       password: data.password,
     };
   }
 
-  static signOut(data: Pick<UserProps, 'id'>) {
+  static signOut(data: Pick<User, 'id'>) {
     return { id: data.id };
   }
 }
