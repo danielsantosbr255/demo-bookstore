@@ -1,61 +1,42 @@
-import { Request, Response } from 'express';
-
-import { User } from './dto/User.js';
+import { CustomError } from '@/common/utils/CustomError';
+import type { Request, Response } from 'express';
 import UserService from './users.service';
 
 export default class UserController {
   constructor(private readonly service: UserService) {}
 
   create = async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
-
-    const user = User.create(name, email, password);
-    const createdUser = await this.service.create(user);
-
-    res.status(201).json({ message: 'User created successfuly!', data: createdUser.name });
+    const createdUser = await this.service.create(req.body);
+    res.status(201).json({ message: 'User created successfuly!', data: createdUser });
   };
 
   getAll = async (_: Request, res: Response) => {
     const users = await this.service.getMany();
-    res.json({
-      message: 'All Users',
-      data: users.map(user => ({ id: user.id, name: user.name, email: user.email })),
-    });
+    res.json({ message: 'All Users', data: users });
   };
 
   getOne = async (req: Request, res: Response) => {
-    const params = req.params;
-    if (!params.id) throw new Error('User ID is required!');
-
-    const id = params.id === 'me' && req.userId ? req.userId : parseInt(params.id);
-    if (isNaN(id)) throw new Error('User ID must be a valid number!');
+    const { id } = req.params as { id: string };
+    if (!id) throw new CustomError('User ID is required!', 400);
 
     const user = await this.service.getOne(id);
-    res.json({ message: 'User', data: { ...user, password: undefined } });
+    res.json({ message: 'User', data: user });
   };
 
   update = async (req: Request, res: Response) => {
     const { id } = req.params as { id: string };
-    if (!id) throw new Error('User ID is required!');
 
-    const userId = parseInt(id);
-    if (isNaN(userId)) throw new Error('User ID must be a valid number!');
-
-    const user = User.update(req.body);
-    const updatedUser = await this.service.update(userId, user);
+    const updatedUser = await this.service.update(id, req.body);
 
     res.json({ message: 'User updated successfuly!', data: updatedUser });
   };
 
   delete = async (req: Request, res: Response) => {
     const { id } = req.params;
-    if (!id) throw new Error('User ID is required!');
+    if (!id) throw new CustomError('User ID is required!', 400);
 
-    const userId = parseInt(id);
-    if (isNaN(userId)) throw new Error('User ID must be a valid number!');
+    await this.service.delete(id);
 
-    const user = await this.service.delete(userId);
-
-    res.json({ message: 'User deleted successfuly!', data: user });
+    res.json({ message: 'User deleted successfuly!', data: id });
   };
 }
