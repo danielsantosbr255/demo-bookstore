@@ -1,22 +1,15 @@
 import { AppModule } from './app.module';
 import logger from './common/utils/logger';
-import { createApp } from './config/core/AppFactory';
+import { AppFactory } from './config/core/AppFactory';
 import { config } from './config/core/config';
 import { initDb } from './config/database';
 
 const bootstrap = async () => {
   await initDb();
 
-  const app = createApp(AppModule);
+  const app = AppFactory.create(AppModule);
 
-  const server = app.listen(config.port, () => {
-    logger.info(`🚀 Server running: http://localhost:${config.port}/api/v1`);
-  });
-
-  server.on('error', err => {
-    logger.error('❌ Server failed to start:', err);
-    process.exit(1);
-  });
+  app.listen(config.port);
 };
 
 bootstrap().catch((err: unknown) => {
