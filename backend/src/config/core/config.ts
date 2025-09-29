@@ -1,4 +1,8 @@
-process.loadEnvFile();
+try {
+  process.loadEnvFile();
+} catch {
+  console.error('[ERROR] ❌ .env file not found!');
+}
 
 const getRequiredEnv = (key: string): string => {
   const value = process.env[key];

@@ -1,3 +1,4 @@
+import { config } from '@/config/core/config';
 import { NextFunction, Request, Response } from 'express';
 import { CustomError } from '../utils/CustomError';
 import logger from '../utils/logger';
@@ -12,7 +13,7 @@ const formatStackTrace = (stack: string | undefined) => {
 };
 
 const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (process.env.NODE_ENV !== 'production') {
+  if (config.env !== 'production') {
     logger.error(`Path Request: ${req.method} ${req.originalUrl}`);
     logger.error('Status:', err instanceof CustomError ? err.statusCode : 500);
     logger.error('Message:', err.message);

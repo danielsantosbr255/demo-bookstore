@@ -1,4 +1,5 @@
 // database/index.ts
+// import { config } from '../core/config';
 import { IDatabase } from './IDatabase';
 import { MemoryAdapter } from './in-memory/in-memory.adapter.ts';
 // import { PostgresAdapter } from './postgres/postgres.adapter.js';
@@ -10,11 +11,11 @@ export const initDb = async (): Promise<void> => {
 
   dbInstance = new MemoryAdapter();
   // dbInstance = new PostgresAdapter({
-  //   user: process.env.DB_USER,
-  //   host: process.env.DB_HOST,
-  //   database: process.env.DB_NAME,
-  //   password: process.env.DB_PASSWORD,
-  //   port: parseInt(process.env.DB_PORT ?? '5432', 10),
+  //   user: config.db.username,
+  //   host: config.db.host,
+  //   database: config.db.database,
+  //   password: config.db.password,
+  //   port: config.db.port,
   // });
 
   await dbInstance.connect();

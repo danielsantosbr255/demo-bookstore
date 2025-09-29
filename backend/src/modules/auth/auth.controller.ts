@@ -1,3 +1,4 @@
+import { config } from '@/config/core/config';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 
@@ -15,7 +16,7 @@ export class AuthController {
 
     res.cookie('userId', userLogged.id, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: config.env === 'production',
       sameSite: 'strict',
       maxAge: 24 * 60 * 60 * 1000,
     });
