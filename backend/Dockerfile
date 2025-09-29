@@ -1,24 +1,39 @@
-FROM node:22.16.0-alpine as builder
-
+FROM node:22.16.0-alpine AS base
 WORKDIR /app
-COPY package*.json .
-RUN npm install
+
+COPY package*.json pnpm-lock.yaml ./
+RUN corepack enable
+
+# -------------------------------------- #
+
+FROM base AS dev
+RUN pnpm install
 COPY . .
-RUN npm run build
 
-FROM node:22.16.0-alpine as runner
+ENV PORT=8080
+ENV NODE_ENV=development
 
+EXPOSE ${PORT}
+CMD [ "pnpm", "dev" ]
+
+# -------------------------------------- #
+
+FROM dev AS builder
+
+RUN pnpm build && pnpm prune --prod
+
+# -------------------------------------- #
+
+FROM gcr.io/distroless/nodejs22-debian12 AS prod
 WORKDIR /app
-COPY package*.json .
-RUN npm install --production
 
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 
-ENV NODE_ENV production
-ENV PORT 5000
-ENV HOST 0.0.0.0
-ENV DATABASE_URL postgresql://postgres:postgres@localhost:5432/postgres
+ENV NODE_ENV=production
+ENV PORT=8080
 
-EXPOSE 5000
+EXPOSE ${PORT}
 
-CMD [ "npm", "start" ]
+CMD [ "./dist/main.js" ]
