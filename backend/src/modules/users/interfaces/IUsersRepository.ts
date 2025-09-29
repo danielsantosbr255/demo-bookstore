@@ -1,10 +1,11 @@
-import { User } from '../entities/user.entity';
+import { IUser } from '../dto/user.dto';
 
 export interface IUserRepository {
-  create(data: User): Promise<User>;
-  findMany(): Promise<User[]>;
-  findById(id: string): Promise<User | null>;
-  findByEmail(email: string): Promise<User | null>;
-  update(id: string, data: User): Promise<User>;
-  delete(id: string): Promise<User>;
+  create(data: IUser): Promise<IUser>;
+  findMany(): Promise<IUser[]>;
+  findById(id: string): Promise<IUser | null>;
+  findByEmail(email: string): Promise<IUser | null>;
+  update(id: string, data: IUser): Promise<IUser>;
+  delete(id: string): Promise<IUser>;
+  table: string;
 }

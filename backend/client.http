@@ -2,9 +2,19 @@
 
 GET {{HOST}}/users
 ###
-GET {{HOST}}/users/6
+GET {{HOST}}/users/0199935a-03ec-7059-b32d-820402b4dc4d
 ###
-DELETE {{HOST}}/users/1
+DELETE {{HOST}}/users/01999359-3596-7428-9198-74ae6e7c5afa
+
+###
+PUT {{HOST}}/users/0199935a-0b08-77de-ab55-0e1e8c3008a9
+Content-Type: application/json
+
+{
+  "name": "Daniel Santos",
+  "email": "daniel@email.com",
+  "password": "123123"
+}
 
 ###
 POST {{HOST}}/users

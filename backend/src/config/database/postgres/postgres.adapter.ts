@@ -1,6 +1,15 @@
 import logger from '@/common/utils/logger';
 import { Pool } from 'pg';
-import { IDatabase, ITable } from '../IDatabase.js';
+import {
+  CountArgs,
+  CreateArgs,
+  DeleteArgs,
+  FindArgs,
+  FindUniqueArgs,
+  IDatabase,
+  ITable,
+  UpdateArgs,
+} from '../IDatabase.js';
 
 class PostgresTable<T> implements ITable<T> {
   constructor(
@@ -8,7 +17,8 @@ class PostgresTable<T> implements ITable<T> {
     private readonly table: string
   ) {}
 
-  async create({ data }: { data: T }) {
+  async create(args: CreateArgs<T>): Promise<T> {
+    const data = args.data;
     if (!data || Object.keys(data).length === 0) {
       throw new Error("create requer parâmetro 'data'");
     }
@@ -24,10 +34,12 @@ class PostgresTable<T> implements ITable<T> {
     `;
 
     const { rows } = await this.pool.query(query, values);
-    return rows[0] as T;
+
+    return rows[0];
   }
 
-  async findMany(object: { where?: object } = {}) {
+  async findMany(args?: FindArgs<T> | undefined): Promise<T[]> {
+    const object = args ?? {};
     const where = object.where;
 
     let query = `SELECT * FROM ${this.table}`;
@@ -44,8 +56,8 @@ class PostgresTable<T> implements ITable<T> {
     return rows;
   }
 
-  async findUnique(object: { where: object }) {
-    const where = object.where;
+  async findUnique(args: FindUniqueArgs<T>): Promise<T | null> {
+    const where = args.where;
 
     if (!where || Object.keys(where).length === 0) throw new Error("findUnique requer parâmetro 'where'");
 
@@ -60,8 +72,8 @@ class PostgresTable<T> implements ITable<T> {
     return rows[0] ?? null;
   }
 
-  async update(object: { where: object; data: object }) {
-    const { where, data } = object;
+  async update(args: UpdateArgs<T>): Promise<T> {
+    const { where, data } = args;
     if (!where || !data) throw new Error("update requer 'where' e 'data'");
 
     const setKeys = Object.keys(data);
@@ -87,8 +99,8 @@ class PostgresTable<T> implements ITable<T> {
     return rows[0] ?? null;
   }
 
-  async delete(object: { where?: object }) {
-    const { where } = object;
+  async delete(args: DeleteArgs<T>): Promise<T> {
+    const { where } = args;
     if (!where) throw new Error("delete requer parâmetro 'where'");
 
     const keys = Object.keys(where);
@@ -102,10 +114,20 @@ class PostgresTable<T> implements ITable<T> {
     return rows[0] ?? null;
   }
 
-  async count() {
+  async count(args: CountArgs<T>): Promise<number> {
+    const where = args.where;
+
+    if (where && Object.keys(where).length > 0) {
+      const keys = Object.keys(where);
+      const conditions = keys.map((key, index) => `${key} = $${index + 1}`).join(' AND ');
+      const query = `SELECT COUNT(*) FROM ${this.table} WHERE ${conditions}`;
+      const { rows } = await this.pool.query(query, Object.values(where));
+      return rows[0].count;
+    }
+
     const query = `SELECT COUNT(*) FROM ${this.table}`;
     const { rows } = await this.pool.query(query);
-    return rows[0].count as number;
+    return rows[0].count;
   }
 }
 

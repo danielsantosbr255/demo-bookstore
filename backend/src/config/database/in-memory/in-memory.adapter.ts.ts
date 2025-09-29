@@ -1,26 +1,47 @@
 import logger from '@/common/utils/logger';
-import { IDatabase, ITable } from '../IDatabase';
+import {
+  CountArgs,
+  CreateArgs,
+  DeleteArgs,
+  FindArgs,
+  FindUniqueArgs,
+  IDatabase,
+  ITable,
+  UpdateArgs,
+} from '../IDatabase';
 
 class MemoryTable<T> implements ITable<T> {
   private rows: T[] = [];
+  private readonly delay = 100;
 
-  async create(args: { data: T }): Promise<T> {
-    this.rows.push(args.data);
-    return args.data;
+  create(args: CreateArgs<T>): Promise<T> {
+    const data = args.data;
+    this.rows.push(data);
+    return new Promise(resolve => setTimeout(() => resolve(data), this.delay));
   }
 
-  async findUnique(args: { where: Partial<T> }) {
+  findMany(args?: FindArgs<T> | undefined): Promise<T[]> {
+    const where = args?.where;
+    if (where && Object.keys(where).length > 0) {
+      const keys = Object.keys(where) as (keyof T)[];
+      return new Promise(resolve =>
+        setTimeout(() => resolve(this.rows.filter(r => keys.every(key => r[key] === where[key]))), this.delay)
+      );
+    }
+    return new Promise(resolve => setTimeout(() => resolve(this.rows), this.delay));
+  }
+
+  findUnique(args: FindUniqueArgs<T>): Promise<T | null> {
     const where = args.where;
+    if (!where || Object.keys(where).length === 0) throw new Error("findUnique requer parâmetro 'where'");
+
     const keys = Object.keys(where) as (keyof T)[];
     const row = this.rows.find(r => keys.every(key => r[key] === where[key]));
-    return row ?? null;
+
+    return new Promise(resolve => setTimeout(() => resolve(row ?? null), this.delay));
   }
 
-  async findMany() {
-    return this.rows;
-  }
-
-  async update(args: { where: Partial<T>; data: Partial<T> }) {
+  update(args: UpdateArgs<T>): Promise<T> {
     const where = args.where;
     const data = args.data;
     const keys = Object.keys(where) as (keyof T)[];
@@ -30,10 +51,10 @@ class MemoryTable<T> implements ITable<T> {
 
     const updatedRow = { ...(this.rows[rowIndex] as T), ...data };
     this.rows[rowIndex] = updatedRow;
-    return updatedRow;
+    return new Promise(resolve => setTimeout(() => resolve(updatedRow), this.delay));
   }
 
-  async delete(args: { where: Partial<T> }) {
+  delete(args: DeleteArgs<T>): Promise<T> {
     const where = args.where;
     const keys = Object.keys(where) as (keyof T)[];
     const rowIndex = this.rows.findIndex(r => keys.every(key => r[key] === where[key]));
@@ -42,11 +63,21 @@ class MemoryTable<T> implements ITable<T> {
 
     const deletedRow = this.rows[rowIndex] as T;
     this.rows.splice(rowIndex, 1);
-    return deletedRow;
+    return new Promise(resolve => setTimeout(() => resolve(deletedRow), this.delay));
   }
 
-  async count() {
-    return this.rows.length;
+  count(args: CountArgs<T>): Promise<number> {
+    const where = args.where;
+    if (where && Object.keys(where).length > 0) {
+      const keys = Object.keys(where) as (keyof T)[];
+      return new Promise(resolve =>
+        setTimeout(
+          () => resolve(this.rows.filter(r => keys.every(key => r[key] === where[key])).length),
+          this.delay
+        )
+      );
+    }
+    return new Promise(resolve => setTimeout(() => resolve(this.rows.length), this.delay));
   }
 }
 

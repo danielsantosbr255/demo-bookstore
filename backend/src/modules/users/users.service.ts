@@ -1,7 +1,6 @@
 import { CustomError } from '@/common/utils/CustomError.js';
-import logger from '@/common/utils/logger.js';
-import { v7 as uuidv7 } from 'uuid';
 import { CreateUserDTO, UpdateUserDTO, UserResponseDTO } from './dto/user.dto.js';
+import { User } from './entities/user.entity.js';
 import { UserMapper } from './mappers/user.mapper.js';
 import UserRepository from './users.repository.js';
 
@@ -10,12 +9,10 @@ export default class UsersService {
 
   async create(data: CreateUserDTO): Promise<UserResponseDTO> {
     const userExists = await this.repository.findByEmail(data.email);
-    if (userExists) throw new CustomError('User already exists!', 422);
+    if (userExists) throw new CustomError('User already exists!', 409);
 
-    const userEntity = UserMapper.toEntity(data, uuidv7());
-    const user = await this.repository.create(userEntity);
-
-    logger.info('✅ User created!', user);
+    const userEntity = User.create(data);
+    const user = await this.repository.create(UserMapper.toDatabase(userEntity));
 
     return UserMapper.toDTO(user);
   }
@@ -41,13 +38,15 @@ export default class UsersService {
 
     if (data.email && data.email !== userExists.email) {
       const userExists = await this.repository.findByEmail(data.email);
-      if (userExists) throw new CustomError('User already exists!', 422);
+      if (userExists) throw new CustomError('User already exists!', 409);
     }
 
-    if (data.name) userExists.updateName(data.name);
-    if (data.email) userExists.updateEmail(data.email);
+    const userEntity = User.create(userExists);
 
-    const user = await this.repository.update(id, userExists);
+    if (data.name) userEntity.updateName(data.name);
+    if (data.email) userEntity.updateEmail(data.email);
+
+    const user = await this.repository.update(id, UserMapper.toDatabase(userEntity));
 
     return UserMapper.toDTO(user);
   }

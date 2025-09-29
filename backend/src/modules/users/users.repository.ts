@@ -1,33 +1,33 @@
 import { IDatabase } from '@/config/database/IDatabase';
-import { User } from './entities/user.entity';
+import { IUser } from './dto/user.dto';
 import { IUserRepository } from './interfaces/IUsersRepository';
 
 export default class UserRepository implements IUserRepository {
-  private table = 'users';
+  public table = 'users';
 
   constructor(private readonly database: IDatabase) {}
 
-  create(data: User) {
-    return this.database.table<User>(this.table).create({ data });
+  create(data: IUser) {
+    return this.database.table<IUser>(this.table).create({ data });
   }
 
-  findMany(): Promise<User[]> {
-    return this.database.table<User>(this.table).findMany();
+  findMany(): Promise<IUser[]> {
+    return this.database.table<IUser>(this.table).findMany();
   }
 
   findById(id: string) {
-    return this.database.table<User>(this.table).findUnique({ where: { id } });
+    return this.database.table<IUser>(this.table).findUnique({ where: { id } });
   }
 
   findByEmail(email: string) {
-    return this.database.table<User>(this.table).findUnique({ where: { email } });
+    return this.database.table<IUser>(this.table).findUnique({ where: { email } });
   }
 
-  update(id: string, data: User) {
-    return this.database.table<User>(this.table).update({ where: { id }, data });
+  update(id: string, data: IUser) {
+    return this.database.table<IUser>(this.table).update({ where: { id }, data });
   }
 
   delete(id: string) {
-    return this.database.table<User>(this.table).delete({ where: { id } });
+    return this.database.table<IUser>(this.table).delete({ where: { id } });
   }
 }

@@ -1,3 +1,6 @@
+import { v7 as uuidv7 } from 'uuid';
+import { CreateUserDTO } from '../dto/user.dto';
+
 export class User {
   private _id: string;
   private _name!: string;
@@ -6,22 +9,30 @@ export class User {
   private _createdAt: Date;
   private _updatedAt: Date;
 
-  private constructor(id: string, name: string, email: string, password: string) {
-    this._id = id;
+  private constructor(
+    name: string,
+    email: string,
+    password: string,
+    id?: string,
+    createdAt?: Date,
+    updatedAt?: Date
+  ) {
+    this._id = id || uuidv7();
     this.updateName(name);
     this.updateEmail(email);
     this.updatePassword(password);
-    this._createdAt = new Date();
-    this._updatedAt = new Date();
+    this._createdAt = createdAt || new Date();
+    this._updatedAt = updatedAt || new Date();
   }
 
-  public static create(id: string, name: string, email: string, password: string): User {
-    return new User(id, name, email, password);
+  public static create(data: CreateUserDTO): User {
+    const { name, email, password, id, createdAt, updatedAt } = data;
+    return new User(name, email, password, id, createdAt, updatedAt);
   }
 
   public updateName(newName: string): void {
     if (!newName || newName.length < 3) {
-      throw new Error('O nome para atualização é inválido.');
+      throw new Error('A name for update is invalid.');
     }
     this._name = newName;
     this._updatedAt = new Date();
@@ -37,6 +48,9 @@ export class User {
   }
 
   public updatePassword(newPassword: string): void {
+    if (!newPassword || newPassword.length < 6) {
+      throw new Error('A password for update is invalid.');
+    }
     this._password = newPassword;
     this._updatedAt = new Date();
   }

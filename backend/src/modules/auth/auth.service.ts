@@ -1,6 +1,6 @@
 import { CustomError } from '@/common/utils/CustomError';
-import { v7 as uuidv7 } from 'uuid';
 import { CreateUserDTO } from '../users/dto/user.dto';
+import { User } from '../users/entities/user.entity';
 import { UserMapper } from '../users/mappers/user.mapper';
 import UserRepository from '../users/users.repository';
 import { SignInDTO, SignOutDTO } from './dto/auth.dto';
@@ -13,8 +13,8 @@ export class AuthService {
     if (userExists) throw new CustomError('User already exists!', 409);
 
     // TODO: Hash password | Argon2?
-    const userEntity = UserMapper.toEntity(data, uuidv7());
-    const user = await this.repository.create(userEntity);
+    const userEntity = User.create(data);
+    const user = await this.repository.create(UserMapper.toDatabase(userEntity));
 
     return UserMapper.toDTO(user);
   }
