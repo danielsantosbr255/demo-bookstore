@@ -1,5 +1,5 @@
 import logger from '@/common/utils/logger';
-import { Pool } from 'pg';
+import { Pool, PoolConfig } from 'pg';
 import {
   CountArgs,
   CreateArgs,
@@ -134,13 +134,13 @@ class PostgresTable<T> implements ITable<T> {
 export class PostgresAdapter implements IDatabase {
   public pool: Pool;
 
-  constructor(config: object) {
+  constructor(config: PoolConfig) {
     this.pool = new Pool(config);
   }
 
   async connect() {
     await this.pool.query('SELECT 1');
-    logger.info('✅ PostgreSQL conectado');
+    logger.info('💾 PostgreSQL conectado');
   }
 
   async disconnect() {
