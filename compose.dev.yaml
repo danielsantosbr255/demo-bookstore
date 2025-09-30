@@ -1,0 +1,35 @@
+services:
+  backend-dev:
+    build:
+      context: ./backend
+      target: dev
+    image: demo-bookstore:dev
+    env_file:
+      - .env
+    volumes:
+      - ./backend/src:/app/src
+      - nodemodules:/app/node_modules
+    ports:
+      - 8080:8080
+    networks:
+      - network
+
+  postgres-dev:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - network
+
+networks:
+  network: {}
+
+volumes:
+  postgres:
+  nodemodules:
