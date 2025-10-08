@@ -5,9 +5,9 @@ services:
       target: prod
     image: demo-bookstore:prod
     env_file:
-      - .env
+      - ./backend/.env
     ports:
-      - 8081:8080
+      - 8080:8080
     networks:
       - network
 
