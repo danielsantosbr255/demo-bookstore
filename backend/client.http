@@ -2,21 +2,21 @@
 
 GET {{HOST}}/users
 ###
-GET {{HOST}}/users/0199935a-03ec-7059-b32d-820402b4dc4d
+GET {{HOST}}/users/0199ac11-baec-716c-8465-5b6437e6a52c
 ###
-DELETE {{HOST}}/users/01999359-3596-7428-9198-74ae6e7c5afa
+DELETE {{HOST}}/users/0199bef7-865a-73ed-8875-53345377c3c3
 
-###
-PUT {{HOST}}/users/0199935a-0b08-77de-ab55-0e1e8c3008a9
+### ------ UPDATE ----- ###
+PUT {{HOST}}/users/0199c01f-7ec2-743f-921a-bded881b776e
 Content-Type: application/json
 
 {
-  "name": "Daniel Santos",
+  "name": "Daniel da Silva Santos",
   "email": "daniel@email.com",
-  "password": "123123"
+  "password": "321321"
 }
 
-###
+### ----- CREATE ----- ###
 POST {{HOST}}/users
 Content-Type: application/json
 
@@ -54,7 +54,6 @@ Content-Type: application/json
   "email": "john@email.com",
   "password": "123123"
 }
-
 
 ### ------ SIGN-IN ------ ###
 POST {{HOST}}/auth/sign-in
