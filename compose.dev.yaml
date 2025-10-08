@@ -27,9 +27,19 @@ services:
     networks:
       - network
 
+  redis:
+    image: redis:8.2.1-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+    networks:
+      - network
+
 networks:
   network: {}
 
 volumes:
+  redis:
   postgres:
-  nodemodules:
