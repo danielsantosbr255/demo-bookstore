@@ -6,7 +6,6 @@ export class Password {
   static async create(raw: string): Promise<Password> {
     if (raw.length < 6) throw new Error('Password too short');
     const hashed = await argon.hash(raw, { type: argon.argon2id });
-    console.log(hashed);
     return new Password(hashed);
   }
 
