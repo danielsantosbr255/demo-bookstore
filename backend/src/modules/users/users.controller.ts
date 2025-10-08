@@ -10,16 +10,16 @@ export default class UserController {
     res.status(201).json({ message: 'User created successfuly!', data: createdUser });
   };
 
-  getAll = async (_: Request, res: Response) => {
-    const users = await this.service.getMany();
-    res.json({ message: 'All Users', data: users });
+  getMany = async (req: Request, res: Response) => {
+    const result = await this.service.getMany(req.query);
+    res.json(result);
   };
 
-  getOne = async (req: Request, res: Response) => {
+  getById = async (req: Request, res: Response) => {
     const { id } = req.params as { id: string };
     if (!id) throw new CustomError('User ID is required!', 400);
 
-    const user = await this.service.getOne(id);
+    const user = await this.service.getById(id);
     res.json({ message: 'User', data: user });
   };
 
@@ -27,7 +27,6 @@ export default class UserController {
     const { id } = req.params as { id: string };
 
     const updatedUser = await this.service.update(id, req.body);
-
     res.json({ message: 'User updated successfuly!', data: updatedUser });
   };
 
