@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { AppController } from './app.controller';
-import { IModule } from './config/core/IModule';
+import { IModule } from './core/IModule';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 

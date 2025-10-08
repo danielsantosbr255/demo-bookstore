@@ -1,4 +1,4 @@
-import { config } from '@/config/core/config';
+import { config } from '@/core/config';
 import { NextFunction, Request, Response } from 'express';
 import { CustomError } from '../utils/CustomError';
 import logger from '../utils/logger';

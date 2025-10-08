@@ -1,8 +1,8 @@
 import { AppModule } from './app.module';
+import { initDb } from './common/database';
 import logger from './common/utils/logger';
-import { AppFactory } from './config/core/AppFactory';
-import { config } from './config/core/config';
-import { initDb } from './config/database';
+import { AppFactory } from './core/AppFactory';
+import { config } from './core/config';
 
 const bootstrap = async () => {
   await initDb();
