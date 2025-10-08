@@ -1,14 +1,6 @@
 import logger from '@/common/utils/logger';
-import {
-  CountArgs,
-  CreateArgs,
-  DeleteArgs,
-  FindArgs,
-  FindUniqueArgs,
-  IDatabase,
-  ITable,
-  UpdateArgs,
-} from '../IDatabase';
+import { IDatabase, ITable } from '../IDatabase';
+import { CountArgs, CreateArgs, DeleteArgs, FindArgs, FindUniqueArgs, UpdateArgs } from '../IDatabase.js';
 
 class MemoryTable<T> implements ITable<T> {
   private rows: T[] = [];
@@ -22,18 +14,23 @@ class MemoryTable<T> implements ITable<T> {
 
   findMany(args?: FindArgs<T> | undefined): Promise<T[]> {
     const where = args?.where;
+    const limit = args?.limit;
+    let result = this.rows;
+
     if (where && Object.keys(where).length > 0) {
       const keys = Object.keys(where) as (keyof T)[];
-      return new Promise(resolve =>
-        setTimeout(() => resolve(this.rows.filter(r => keys.every(key => r[key] === where[key]))), this.delay)
-      );
+      result = this.rows.filter(r => keys.every(key => r[key] === where[key]));
     }
-    return new Promise(resolve => setTimeout(() => resolve(this.rows), this.delay));
+
+    if (args?.offset) result = result.slice(args.offset);
+    if (args?.limit) result = result.slice(0, limit);
+
+    return new Promise(resolve => setTimeout(() => resolve(result), this.delay));
   }
 
   findUnique(args: FindUniqueArgs<T>): Promise<T | null> {
     const where = args.where;
-    if (!where || Object.keys(where).length === 0) throw new Error("findUnique requer parâmetro 'where'");
+    if (!where || Object.keys(where).length === 0) throw new Error('findUnique require "where" parameter');
 
     const keys = Object.keys(where) as (keyof T)[];
     const row = this.rows.find(r => keys.every(key => r[key] === where[key]));
@@ -47,7 +44,7 @@ class MemoryTable<T> implements ITable<T> {
     const keys = Object.keys(where) as (keyof T)[];
     const rowIndex = this.rows.findIndex(r => keys.every(key => r[key] === where[key]));
 
-    if (rowIndex === -1) throw new Error('Registro não encontrado para atualização');
+    if (rowIndex === -1) throw new Error('update require "where" parameter');
 
     const updatedRow = { ...(this.rows[rowIndex] as T), ...data };
     this.rows[rowIndex] = updatedRow;
@@ -59,7 +56,7 @@ class MemoryTable<T> implements ITable<T> {
     const keys = Object.keys(where) as (keyof T)[];
     const rowIndex = this.rows.findIndex(r => keys.every(key => r[key] === where[key]));
 
-    if (rowIndex === -1) throw new Error('Registro não encontrado para exclusão');
+    if (rowIndex === -1) throw new Error('delete require "where" parameter');
 
     const deletedRow = this.rows[rowIndex] as T;
     this.rows.splice(rowIndex, 1);
@@ -68,16 +65,14 @@ class MemoryTable<T> implements ITable<T> {
 
   count(args: CountArgs<T>): Promise<number> {
     const where = args.where;
+    let result = this.rows;
+
     if (where && Object.keys(where).length > 0) {
       const keys = Object.keys(where) as (keyof T)[];
-      return new Promise(resolve =>
-        setTimeout(
-          () => resolve(this.rows.filter(r => keys.every(key => r[key] === where[key])).length),
-          this.delay
-        )
-      );
+      result = this.rows.filter(r => keys.every(key => r[key] === where[key]));
     }
-    return new Promise(resolve => setTimeout(() => resolve(this.rows.length), this.delay));
+
+    return new Promise(resolve => setTimeout(() => resolve(result.length), this.delay));
   }
 }
 
