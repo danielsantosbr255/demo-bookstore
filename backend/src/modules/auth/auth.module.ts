@@ -1,7 +1,7 @@
-import { IModule } from '@/config/core/IModule';
-import { getDb } from '@/config/database';
+import { getDb } from '@/common/database';
+import { IModule } from '@/core/IModule';
 import { Router } from 'express';
-import UserRepository from '../users/users.repository';
+import UsersService from '../users/users.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
@@ -9,8 +9,8 @@ export class AuthModule implements IModule {
   readonly name = 'auth';
   readonly router: Router = Router();
 
-  readonly repository = new UserRepository(getDb());
-  readonly service = new AuthService(this.repository);
+  readonly userService = new UsersService(getDb());
+  readonly service = new AuthService(this.userService);
   readonly controller = new AuthController(this.service);
 
   constructor() {

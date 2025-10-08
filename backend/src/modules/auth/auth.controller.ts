@@ -1,4 +1,4 @@
-import { config } from '@/config/core/config';
+import { config } from '@/core/config';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 

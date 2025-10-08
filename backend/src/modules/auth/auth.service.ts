@@ -1,32 +1,32 @@
 import { CustomError } from '@/common/utils/CustomError';
 import { CreateUserDTO } from '../users/dto/user.dto';
-import { User } from '../users/entities/user.entity';
-import { UserMapper } from '../users/mappers/user.mapper';
-import UserRepository from '../users/users.repository';
+import { User } from '../users/user.entity';
+import { UserMapper } from '../users/user.mapper';
+import UsersService from '../users/users.service';
 import { SignInDTO, SignOutDTO } from './dto/auth.dto';
 
 export class AuthService {
-  constructor(private readonly repository: UserRepository) {}
+  constructor(private readonly userService: UsersService) {}
 
   async signUp(data: CreateUserDTO) {
-    const userExists = await this.repository.findByEmail(data.email);
+    const userExists = await this.userService.getByEmail(data.email);
     if (userExists) throw new CustomError('User already exists!', 409);
 
-    // TODO: Hash password | Argon2?
-    const userEntity = User.create(data);
-    const user = await this.repository.create(UserMapper.toDatabase(userEntity));
-
-    return UserMapper.toDTO(user);
+    const user = await this.userService.create(data);
+    return user;
   }
 
   async signIn(data: SignInDTO) {
-    const user = await this.repository.findByEmail(data.email);
+    const existsUser = await this.userService.getByEmail(data.email);
+    if (!existsUser) throw new CustomError('Invalid credentials!', 401);
 
-    if (!user || user.password !== data.password) {
+    const user = await User.create(existsUser);
+
+    if (await user.password.compare(user.password.hashed)) {
       throw new CustomError('Invalid credentials!', 401);
     }
 
-    return UserMapper.toDTO(user);
+    return UserMapper.toResponse(UserMapper.toDatabase(user));
   }
 
   signOut(data: SignOutDTO) {
