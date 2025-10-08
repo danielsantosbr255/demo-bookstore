@@ -1,60 +1,96 @@
+import { PaginationMetadata, PaginationQueryParams } from '@/@types/pagination.js';
+import { IDatabase } from '@/common/database/IDatabase.js';
 import { CustomError } from '@/common/utils/CustomError.js';
-import { CreateUserDTO, UpdateUserDTO, UserResponseDTO } from './dto/user.dto.js';
-import { User } from './entities/user.entity.js';
-import { UserMapper } from './mappers/user.mapper.js';
-import UserRepository from './users.repository.js';
+import { createPaginationMetadata, parsePaginationParams } from '@/common/utils/pagination.util.js';
+import { CreateUserDTO, IUser, UpdateUserDTO, UserResponseDTO } from './dto/user.dto.js';
+import { User } from './user.entity.js';
+import { UserMapper } from './user.mapper.js';
+
+type query = PaginationQueryParams & {
+  name?: string;
+  email?: string;
+};
 
 export default class UsersService {
-  constructor(private readonly repository: UserRepository) {}
+  private readonly table = 'users';
+  constructor(private readonly db: IDatabase) {}
 
   async create(data: CreateUserDTO): Promise<UserResponseDTO> {
-    const userExists = await this.repository.findByEmail(data.email);
+    const userExists = await this.db.table<IUser>(this.table).findUnique({
+      where: { email: data.email },
+    });
+
     if (userExists) throw new CustomError('User already exists!', 409);
+    const userEntity = await User.create(data);
 
-    const userEntity = User.create(data);
-    const user = await this.repository.create(UserMapper.toDatabase(userEntity));
+    const user = await this.db.table<IUser>(this.table).create({
+      data: UserMapper.toDatabase(userEntity),
+      omit: ['password'],
+    });
 
-    return UserMapper.toDTO(user);
+    return user;
   }
 
-  async getMany(): Promise<UserResponseDTO[]> {
-    const users = await this.repository.findMany();
-    return users.map(user => UserMapper.toDTO(user));
+  async getMany(query: query): Promise<{ data: UserResponseDTO[]; metadata: PaginationMetadata }> {
+    const where: Record<string, string> = {};
+    const { page, pageSize, offset } = parsePaginationParams(query);
+
+    if (query.name) where.name = query.name;
+    if (query.email) where.email = query.email;
+
+    const users = await this.db.table<IUser>(this.table).findMany({
+      where,
+      limit: pageSize,
+      offset,
+      omit: ['password'],
+    });
+
+    const totalItems = await this.db.table<IUser>(this.table).count({ where });
+    const metadata = createPaginationMetadata({ page, pageSize, totalItems });
+
+    return { data: users, metadata };
   }
 
-  async getOne(id: string): Promise<UserResponseDTO | null> {
-    const user = await this.repository.findById(id);
-    return user ? UserMapper.toDTO(user) : null;
+  async getById(id: string): Promise<UpdateUserDTO | null> {
+    const user = await this.db.table<IUser>(this.table).findUnique({
+      where: { id },
+      omit: ['password'],
+    });
+    return user ? UserMapper.toResponse(user) : null;
   }
 
-  async getByEmail(email: string): Promise<UserResponseDTO | null> {
-    const user = await this.repository.findByEmail(email);
-    return user ? UserMapper.toDTO(user) : null;
+  async getByEmail(email: string): Promise<IUser | null> {
+    const user = await this.db.table<IUser>(this.table).findUnique({ where: { email } });
+    return user;
   }
 
   async update(id: string, data: UpdateUserDTO): Promise<UserResponseDTO> {
-    const userExists = await this.repository.findById(id);
+    const userExists = await this.db.table<IUser>(this.table).findUnique({ where: { id } });
     if (!userExists) throw new CustomError('User not found!', 404);
 
     if (data.email && data.email !== userExists.email) {
-      const userExists = await this.repository.findByEmail(data.email);
+      const userExists = await this.db.table<IUser>(this.table).findUnique({ where: { email: data.email } });
       if (userExists) throw new CustomError('User already exists!', 409);
     }
 
-    const userEntity = User.create(userExists);
+    const userEntity = await User.create(userExists);
 
     if (data.name) userEntity.updateName(data.name);
     if (data.email) userEntity.updateEmail(data.email);
 
-    const user = await this.repository.update(id, UserMapper.toDatabase(userEntity));
+    const user = await this.db.table<IUser>(this.table).update({
+      where: { id },
+      data: UserMapper.toDatabaseUpdate(userEntity, data),
+      omit: ['password'],
+    });
 
-    return UserMapper.toDTO(user);
+    return UserMapper.toResponse(user);
   }
 
   async delete(id: string): Promise<void> {
-    const user = await this.repository.findById(id);
+    const user = await this.db.table<IUser>(this.table).findUnique({ where: { id } });
     if (!user) throw new CustomError('User not found!', 404);
 
-    this.repository.delete(id);
+    this.db.table<IUser>(this.table).delete({ where: { id } });
   }
 }
