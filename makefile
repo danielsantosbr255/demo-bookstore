@@ -30,7 +30,7 @@ recreate:
 
 reset:
 	docker compose -f $(COMPOSE_FILE) -p $(PROJECT_NAME) down --volumes --remove-orphans
-	docker compose -f $(COMPOSE_FILE) -p $(PROJECT_NAME) up -d --build
+	docker compose -f $(COMPOSE_FILE) -p $(PROJECT_NAME) up -d --build --watch
 
 logs:
 	docker compose -f $(COMPOSE_FILE) -p $(PROJECT_NAME) logs -f
