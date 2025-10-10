@@ -14,7 +14,7 @@
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write --ignore-unknown",
     "test": "jest",
-    "migrate": "tsx ./src/config/database/postgres/migrate.ts"
+    "migrate": "tsx ./src/common/database/postgres/migrate.ts"
   },
   "packageManager": "pnpm@10.18.1",
   "dependencies": {
