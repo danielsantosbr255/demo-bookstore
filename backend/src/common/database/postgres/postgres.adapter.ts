@@ -71,19 +71,22 @@ class PostgresTable<T> implements ITable<T> {
   }
 
   async update(args: UpdateArgs<T>): Promise<T> {
-    const { where, data } = args;
+    const { where, data, omit, select } = args;
     if (!where || !data) throw new Error(ERROR_MESSAGES.UPDATE_REQUIRED);
 
     const { setClause, values: setValues } = buildSetClause(data, 1);
     const whereStartIndex = setValues.length + 1;
+
     const { whereClause, values: whereValues } = buildWhereClause(where, whereStartIndex);
     const allValues = [...setValues, ...whereValues];
+
+    const columns = await buildSelectClause<T>(this.pool, this.tableName, select, omit);
 
     const query = `
       UPDATE ${this.tableName}
       SET ${setClause}
       ${whereClause}
-      RETURNING *
+      RETURNING ${columns}
     `;
 
     const { rows } = await this.executeQuery(query, allValues);
@@ -91,11 +94,13 @@ class PostgresTable<T> implements ITable<T> {
   }
 
   async delete(args: DeleteArgs<T>): Promise<T> {
-    const where = args.where;
+    const { where, omit, select } = args;
     if (!where) throw new Error(ERROR_MESSAGES.DELETE_WHERE_REQUIRED);
 
+    const columns = await buildSelectClause<T>(this.pool, this.tableName, select, omit);
     const { whereClause, values } = buildWhereClause(where);
-    const query = `DELETE FROM ${this.tableName} ${whereClause} RETURNING *`;
+
+    const query = `DELETE FROM ${this.tableName} ${whereClause} RETURNING ${columns}`;
     const { rows } = await this.executeQuery(query, values);
     return rows[0];
   }
