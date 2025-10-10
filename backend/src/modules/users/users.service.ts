@@ -88,7 +88,7 @@ export default class UsersService {
   }
 
   async delete(id: string): Promise<void> {
-    const user = await this.db.table<IUser>(this.table).findUnique({ where: { id } });
+    const user = await this.db.table<IUser>(this.table).findUnique({ where: { id }, select: ['id'] });
     if (!user) throw new CustomError('User not found!', 404);
 
     this.db.table<IUser>(this.table).delete({ where: { id } });
