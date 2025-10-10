@@ -1,7 +1,7 @@
 function Logo() {
   return (
     <div>
-      <strong>Fireforge Labs</strong>
+      <strong>Bookstore</strong>
     </div>
   );
 }
