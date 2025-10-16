@@ -10,10 +10,11 @@ export const BookstoreShowcase: FC = () => {
       </div>
 
       <div className="flex flex-col items-center text-center mt-10">
-        <img src="/public/bookstore30.png" alt="Livro em destaque" className="w-40 h-56 object-cover shadow-md rounded-lg mb-4" />
+        <img src="/images/showcase13.png" alt="Livro em destaque" className="w-40 h-56 object-cover shadow-md rounded-lg mb-4" />
         <h3 className="text-lg font-semibold text-primary">A Livraria dos Sonhos</h3>
         <p className="text-sm text-stone-600">por Daniel Santos</p>
-        <Button variant="outline" className="mt-4 !px-4 !py-2">
+
+        <Button variant="outline" className="mt-4">
           Ver mais
         </Button>
       </div>
