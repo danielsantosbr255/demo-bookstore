@@ -2,12 +2,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
 @import "tailwindcss";
+@plugin "tailwindcss-motion";
+
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
 
 @theme {
-  --color-secondary: var(--color-sky-600);
-
   --color-primary: var(--color-sky-700);
   --color-primary-hover: var(--color-sky-800);
+  --color-secondary: var(--color-sky-600);
+  --color-accent: var(--color-cyan-500);
 
   --color-highlight: var(--color-sky-800);
   --color-primary-bg: var(--color-white);
@@ -22,25 +29,73 @@
 
   --breakpoint-xs: 480px;
 
-  --background-image-showcase-pattern: url("/bookstore33.png");
+  --background-image-home-pattern: url("/images/banner1.jpg");
+  --background-image-showcase-pattern: url("/images/showcase23.png");
+
+  --animate-spin-bg: spin-bg 4s linear infinite;
+  --animate-border-glow: border-glow 6s linear infinite;
+  --animate-border-spin: border-spin 3s linear infinite;
+
+  @keyframes spin-bg {
+    to {
+      --angle: 360deg;
+    }
+  }
+
+  @keyframes border-glow {
+    0% {
+      filter: hue-rotate(0deg);
+    }
+    100% {
+      filter: hue-rotate(360deg);
+    }
+  }
+
+  @keyframes border-spin {
+    100% {
+      transform: rotate(-360deg);
+    }
+  }
 }
 
 @layer base {
-  body {
-    font-family: "DM Sans", serif;
-    font-optical-sizing: auto;
-    background: #030014;
+  .theme-light {
+    --color-secondary: var(--color-sky-600);
+
+    --color-primary: var(--color-sky-700);
+    --color-primary-hover: var(--color-sky-800);
+
+    --color-highlight: var(--color-sky-800);
+    --color-primary-bg: var(--color-white);
   }
+
+  .theme-dark {
+    --color-secondary: var(--color-sky-600);
+
+    --color-primary: var(--color-sky-700);
+    --color-primary-hover: var(--color-sky-800);
+
+    --color-highlight: var(--color-sky-800);
+    --color-primary-bg: var(--color-white);
+  }
+}
+
+@utility border-rotating {
+  position: relative;
+  background: conic-gradient(
+    from var(--angle),
+    var(--color-primary) 0deg,
+    var(--color-secondary) 120deg,
+    var(--color-accent) 240deg,
+    var(--color-primary) 360deg
+  );
+  /* mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); */
+  mask-composite: exclude;
+  animation: var(--animate-spin-bg);
 }
 
 @utility text-gradient {
   @apply bg-linear-to-r from-primary to-secondary/80 bg-clip-text text-transparent;
-}
-
-@utility fancy-text {
-  -webkit-text-stroke: 5px rgba(206, 206, 251, 0.5);
-  font-size: 190px;
-  font-family: "Bebas Neue", sans-serif;
 }
 
 @utility hide-scrollbar {
