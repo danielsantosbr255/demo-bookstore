@@ -12,7 +12,7 @@ type BlockProps = {
 const Block = ({ title, className, icon }: BlockProps) => {
   return (
     <div
-      className={`flex absolute text-gray-500 bg-white font-medium w-50 gap-2 items-center text-sm p-2 text-left rounded-2xl shadow ${className}`}
+      className={`flex absolute motion-preset-pop text-gray-500 bg-white font-medium w-50 gap-2 items-center text-sm p-2 text-left rounded-2xl shadow ${className}`}
     >
       <span className="bg-primary/90 backdrop-blur-md text-white p-3 rounded-xl aspect-square">
         {icon ? icon : <HiOutlineShoppingCart size={20} />}
@@ -24,7 +24,7 @@ const Block = ({ title, className, icon }: BlockProps) => {
 
 const Showcase = () => {
   return (
-    <section className="bg-showcase-pattern relative text-white hidden lg:flex p-2 w-full h-10/12 rounded-2xl shadow-lg bg-center bg-cover bg-no-repeat">
+    <section className="bg-showcase-pattern motion-preset-slide-up-sm relative text-white hidden lg:flex p-2 w-full h-10/12 rounded-2xl shadow-lg bg-center bg-cover bg-no-repeat">
       <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-black/10 rounded-2xl" />
 
       <div className="relative flex flex-col h-full border-2 border-dashed rounded-2xl w-full z-10 gap-10 text-2xl font-bold items-center justify-center text-center">
