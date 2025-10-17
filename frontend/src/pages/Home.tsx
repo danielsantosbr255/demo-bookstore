@@ -8,15 +8,15 @@ const Home = () => {
       <HomeBanner />
 
       <section className="flex flex-col w-full items-center justify-center pt-5 gap-5">
-        <h2 className="text-2xl font-bold text-primary">Categorias em destaque</h2>
+        <h2 className="text-2xl font-bold">Categorias em destaque</h2>
 
-        <div className="flex w-full gap-4 justify-center items-center">
+        <div className="flex w-full gap-2 lg:gap-4 px-2 justify-center items-center">
           <CategoriesCard label="Fantasia" icon={<GiCastle size={30} />} />
           <CategoriesCard label="Ficcão" icon={<GiUfo size={30} />} />
           <CategoriesCard label="Romance" icon={<GiLovers size={30} />} />
           <CategoriesCard label="Aventura" icon={<GiCavalry size={30} />} />
-          <CategoriesCard label="Drama" icon={<GiBrokenHeartZone size={30} />} />
-          <CategoriesCard label="Suspense" icon={<GiCowled size={30} />} />
+          <CategoriesCard className="hidden lg:flex" label="Drama" icon={<GiBrokenHeartZone size={30} />} />
+          <CategoriesCard className="hidden lg:flex" label="Suspense" icon={<GiCowled size={30} />} />
         </div>
       </section>
     </main>
