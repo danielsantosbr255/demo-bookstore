@@ -1,11 +1,11 @@
 import { FaBookReader } from "react-icons/fa";
 import { Link } from "react-router";
 
-function Logo() {
+function Logo({ size = 35 }: { size?: number }) {
   return (
-    <Link to="/" className="flex items-center gap-2 text-primary hover:text-secondary hover:scale-105 transition-all">
-      <FaBookReader size={40} />
-      <strong className="text-2xl font-bold tracking-widest text-gradient">Bookstore</strong>
+    <Link to="/" className="flex items-center motion-preset-slide-up gap-2 hover:text-secondary hover:scale-105 transition-all">
+      <FaBookReader size={size} />
+      <strong className="lg:text-2xl font-bold tracking-widest text-gradient">Bookstore</strong>
     </Link>
   );
 }
