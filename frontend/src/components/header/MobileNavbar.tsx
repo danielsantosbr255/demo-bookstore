@@ -1,9 +1,8 @@
-import { FaUserCircle } from "react-icons/fa";
 import Logo from "../ui/Logo";
-import Search from "../ui/Search";
-import { AiOutlineLogin } from "react-icons/ai";
-import { Link } from "react-router";
 import type { JSX } from "react";
+import Search from "../ui/Search";
+import { Link } from "react-router";
+import { ProfileIcon, SignInIcon } from "../../libs/utils/icons";
 
 const NavItem = ({ label, icon, href }: { label: string; icon: JSX.Element; href: string }) => {
   return (
@@ -28,9 +27,9 @@ const MobileHeader = () => {
 
       <div className="flex gap-6 items-center text-xs font-semibold">
         {user ? (
-          <NavItem label="Perfil" icon={<FaUserCircle size={25} />} href="/profile" />
+          <NavItem label="Perfil" icon={<ProfileIcon size={25} />} href="/profile" />
         ) : (
-          <NavItem label="Entrar" icon={<AiOutlineLogin size={25} />} href="/sign-in" />
+          <NavItem label="Entrar" icon={<SignInIcon size={25} />} href="/sign-in" />
         )}
       </div>
     </nav>

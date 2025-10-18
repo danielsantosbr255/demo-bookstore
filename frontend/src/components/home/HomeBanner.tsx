@@ -1,6 +1,5 @@
 import Button from "../ui/Button";
-import { HiOutlineBookOpen } from "react-icons/hi";
-import { GiSpellBook } from "react-icons/gi";
+import { ExploreBookIcon, HomeBannerIcon } from "../../libs/utils/icons";
 
 const HomeBanner = () => {
   return (
@@ -8,7 +7,7 @@ const HomeBanner = () => {
       <div className="bg-home-pattern bg-center bg-no-repeat bg-cover flex flex-col w-full h-full items-center justify-center rounded-b-2xl">
         <div className="motion-preset-slide-up space-y-6">
           <h1 className="flex flex-col font-bold text-white text-shadow-2xs items-center">
-            <GiSpellBook size={120} />
+            <HomeBannerIcon size={120} />
             Bem-vindo ao Bookstore
           </h1>
 
@@ -18,7 +17,7 @@ const HomeBanner = () => {
             align="center"
           >
             Esplore novos títulos
-            <HiOutlineBookOpen />
+            <ExploreBookIcon size={25} />
           </Button>
         </div>
       </div>

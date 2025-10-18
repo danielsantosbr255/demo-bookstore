@@ -1,8 +1,7 @@
-import Button from "../ui/Button";
-import Input from "../ui/Input";
-import { AiOutlineLogin } from "react-icons/ai";
-import { PiUserCirclePlusFill } from "react-icons/pi";
 import Logo from "../ui/Logo";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+import { SignInIcon, SignUpIcon } from "../../libs/utils/icons";
 
 const SignInForm = () => {
   return (
@@ -24,7 +23,7 @@ const SignInForm = () => {
 
             <Button className="mt-4 flex justify-between">
               Acessar
-              <AiOutlineLogin size={25} />
+              <SignInIcon size={25} />
             </Button>
           </form>
         </section>
@@ -34,7 +33,7 @@ const SignInForm = () => {
 
           <Button variant="outline" className="flex justify-between">
             Cadastrar
-            <PiUserCirclePlusFill size={25} />
+            <SignUpIcon size={25} />
           </Button>
         </section>
       </div>
