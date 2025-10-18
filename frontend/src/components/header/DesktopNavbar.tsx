@@ -1,9 +1,8 @@
-import { Link } from "react-router";
 import Logo from "../ui/Logo";
-import { AiOutlineLogin } from "react-icons/ai";
-import { FaRegHeart, FaShoppingBag, FaUserCircle } from "react-icons/fa";
 import type { JSX } from "react";
 import Search from "../ui/Search";
+import { Link } from "react-router";
+import { CartIcon, NotificationsIcon, ProfileIcon, SignInIcon } from "../../libs/utils/icons";
 
 const NavItem = ({ label, icon, href }: { label: string; icon: JSX.Element; href: string }) => {
   return (
@@ -27,12 +26,12 @@ const Navbar = () => {
       </div>
 
       <div className="flex gap-6 items-center text-xs font-semibold">
-        <NavItem label="Notificacões" icon={<FaRegHeart size={25} />} href="#" />
-        <NavItem label="Carrinho" icon={<FaShoppingBag size={25} />} href="#" />
+        <NavItem label="Notificacões" icon={<NotificationsIcon size={25} />} href="#" />
+        <NavItem label="Carrinho" icon={<CartIcon size={25} />} href="#" />
         {user ? (
-          <NavItem label="Perfil" icon={<FaUserCircle size={25} />} href="/profile" />
+          <NavItem label="Perfil" icon={<ProfileIcon size={25} />} href="/profile" />
         ) : (
-          <NavItem label="Entrar" icon={<AiOutlineLogin size={25} />} href="/sign-in" />
+          <NavItem label="Entrar" icon={<SignInIcon size={25} />} href="/sign-in" />
         )}
       </div>
     </nav>
