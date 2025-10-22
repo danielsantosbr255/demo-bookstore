@@ -14,6 +14,6 @@ export class Password {
   }
 
   async compare(raw: string): Promise<boolean> {
-    return await argon.verify(raw, this.hashed);
+    return await argon.verify(this.hashed, raw);
   }
 }
