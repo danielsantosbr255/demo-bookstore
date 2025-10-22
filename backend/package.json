@@ -16,7 +16,7 @@
     "test": "jest",
     "migrate": "tsx ./src/common/database/postgres/migrate.ts"
   },
-  "packageManager": "pnpm@10.18.1",
+  "packageManager": "pnpm@10.18.3",
   "dependencies": {
     "argon2": "^0.44.0",
     "cookie-parser": "^1.4.7",
@@ -24,7 +24,8 @@
     "express": "^5.1.0",
     "pg": "^8.16.3",
     "ua-parser-js": "^2.0.5",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
