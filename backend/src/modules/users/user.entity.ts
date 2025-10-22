@@ -1,42 +1,20 @@
 import { Email } from '@/common/value-objects/email.vo';
 import { Password } from '@/common/value-objects/password.vo';
 import { v7 as uuidv7 } from 'uuid';
-import { CreateUserDTO } from './dto/user.dto';
+import { CreateUserDTO, IUser } from './dto/user.dto';
 
 export class User {
-  private _id: string;
-  private _name!: string;
-  private _email!: string;
-  private _password!: Password;
-  private _createdAt: Date;
-  private _updatedAt: Date;
-
   private constructor(
-    name: string,
-    email: string,
-    password: Password,
-    id?: string,
-    createdAt?: Date,
-    updatedAt?: Date
-  ) {
-    this._id = id || uuidv7();
-    this.updateName(name);
-    this.updateEmail(email);
-    this._password = password;
-    this._createdAt = createdAt || new Date();
-    this._updatedAt = updatedAt || new Date();
-  }
-
-  public static async create(data: CreateUserDTO): Promise<User> {
-    const { id, name, email, password, createdAt, updatedAt } = data;
-
-    const passwordHashed = await Password.create(password);
-
-    return new User(name, email, passwordHashed, id, createdAt, updatedAt);
-  }
+    public readonly id: string,
+    private _name: string,
+    private _email: Email,
+    private _password: Password,
+    private _createdAt: Date,
+    private _updatedAt: Date
+  ) {}
 
   public updateName(newName: string): void {
-    if (!newName || newName.length < 3) {
+    if (!User.isValidName(newName)) {
       throw new Error('Name must be at least 3 characters long.');
     }
     this._name = newName;
@@ -44,7 +22,7 @@ export class User {
   }
 
   public updateEmail(newEmail: string): void {
-    this._email = new Email(newEmail).value;
+    this._email = Email.create(newEmail);
     this._updatedAt = new Date();
   }
 
@@ -53,13 +31,33 @@ export class User {
     this._updatedAt = new Date();
   }
 
-  public get id(): string {
-    return this._id;
+  public static async create(data: CreateUserDTO): Promise<User> {
+    const { name, email, password } = data;
+
+    if (!User.isValidName(name)) throw new Error('Name must be at least 3 characters long.');
+
+    const id = data.id || uuidv7();
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    const hashed = await Password.create(password);
+    const emailVO = Email.create(email);
+
+    return new User(id, name, emailVO, hashed, createdAt, updatedAt);
   }
+
+  public static fromDatabase(data: IUser): User {
+    const { id, name, email, password, createdAt, updatedAt } = data;
+    return new User(id, name, Email.create(email), Password.restore(password), createdAt, updatedAt);
+  }
+
+  private static isValidName(name: string): boolean {
+    return typeof name === 'string' && name.trim().length >= 3;
+  }
+
   public get name(): string {
     return this._name;
   }
-  public get email(): string {
+  public get email(): Email {
     return this._email;
   }
   public get password(): Password {
