@@ -73,7 +73,7 @@ export default class UsersService {
       if (userExists) throw new CustomError('User already exists!', 409);
     }
 
-    const userEntity = await User.create(userExists);
+    const userEntity = User.fromDatabase(userExists);
 
     if (data.name) userEntity.updateName(data.name);
     if (data.email) userEntity.updateEmail(data.email);
@@ -88,9 +88,12 @@ export default class UsersService {
   }
 
   async delete(id: string): Promise<void> {
-    const user = await this.db.table<IUser>(this.table).findUnique({ where: { id }, select: ['id'] });
-    if (!user) throw new CustomError('User not found!', 404);
+    const user = await this.db.table<IUser>(this.table).findUnique({
+      where: { id },
+      select: ['id'],
+    });
 
+    if (!user) throw new CustomError('User not found!', 404);
     this.db.table<IUser>(this.table).delete({ where: { id } });
   }
 }

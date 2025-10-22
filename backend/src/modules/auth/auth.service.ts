@@ -20,9 +20,10 @@ export class AuthService {
     const existsUser = await this.userService.getByEmail(data.email);
     if (!existsUser) throw new CustomError('Invalid credentials!', 401);
 
-    const user = await User.create(existsUser);
+    const user = User.fromDatabase(existsUser);
+    const isPasswordValid = await user.password.compare(data.password);
 
-    if (await user.password.compare(user.password.hashed)) {
+    if (!isPasswordValid) {
       throw new CustomError('Invalid credentials!', 401);
     }
 
