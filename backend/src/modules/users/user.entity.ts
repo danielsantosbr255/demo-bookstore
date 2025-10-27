@@ -37,17 +37,17 @@ export class User {
     if (!User.isValidName(name)) throw new Error('Name must be at least 3 characters long.');
 
     const id = data.id || uuidv7();
-    const createdAt = new Date();
-    const updatedAt = new Date();
+    const created_at = new Date();
+    const updated_at = new Date();
     const hashed = await Password.create(password);
     const emailVO = Email.create(email);
 
-    return new User(id, name, emailVO, hashed, createdAt, updatedAt);
+    return new User(id, name, emailVO, hashed, created_at, updated_at);
   }
 
   public static fromDatabase(data: IUser): User {
-    const { id, name, email, password, createdAt, updatedAt } = data;
-    return new User(id, name, Email.create(email), Password.restore(password), createdAt, updatedAt);
+    const { id, name, email, password, created_at, updated_at } = data;
+    return new User(id, name, Email.create(email), Password.restore(password), created_at, updated_at);
   }
 
   private static isValidName(name: string): boolean {
@@ -63,10 +63,10 @@ export class User {
   public get password(): Password {
     return this._password;
   }
-  public get createdAt(): Date {
+  public get created_at(): Date {
     return this._createdAt;
   }
-  public get updatedAt(): Date {
+  public get updated_at(): Date {
     return this._updatedAt;
   }
 }

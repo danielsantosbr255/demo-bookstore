@@ -5,8 +5,8 @@ export const userSchema = z.object({
   name: z.string(),
   email: z.email(),
   password: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  created_at: z.date(),
+  updated_at: z.date(),
 });
 
 export const createUserSchema = z.object({
@@ -14,8 +14,8 @@ export const createUserSchema = z.object({
   name: z.string().min(3).max(50),
   email: z.email(),
   password: z.string().min(6).max(50),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  created_at: z.date().optional(),
+  updated_at: z.date().optional(),
 });
 
 export const updateUserSchema = z.object({
@@ -27,8 +27,8 @@ export const userResponseSchema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.email(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  created_at: z.date(),
+  updated_at: z.date(),
 });
 
 export type IUser = z.infer<typeof userSchema>;
