@@ -16,11 +16,12 @@
     "test": "jest",
     "migrate": "tsx ./src/common/database/postgres/migrate.ts"
   },
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.19.0",
   "dependencies": {
     "argon2": "^0.44.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "express": "^5.1.0",
     "pg": "^8.16.3",
     "ua-parser-js": "^2.0.5",
