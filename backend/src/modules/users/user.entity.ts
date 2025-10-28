@@ -1,7 +1,8 @@
 import { Email } from '@/common/value-objects/email.vo';
 import { Password } from '@/common/value-objects/password.vo';
+import { HttpError } from '@/core/errors/HttpError';
 import { v7 as uuidv7 } from 'uuid';
-import { CreateUserDTO, IUser } from './dto/user.dto';
+import { CreateUserDTO, IUser } from './user.dto';
 
 export class User {
   private constructor(
@@ -13,9 +14,25 @@ export class User {
     private _updatedAt: Date
   ) {}
 
+  public static async create(data: CreateUserDTO): Promise<User> {
+    const { name, email, password } = data;
+
+    if (!User.isValidName(name)) {
+      throw HttpError.BadRequest('Name must be at least 3 characters long.');
+    }
+
+    const id = data.id || uuidv7();
+    const created_at = new Date();
+    const updated_at = new Date();
+    const hashed = await Password.create(password);
+    const emailVO = Email.create(email);
+
+    return new User(id, name, emailVO, hashed, created_at, updated_at);
+  }
+
   public updateName(newName: string): void {
     if (!User.isValidName(newName)) {
-      throw new Error('Name must be at least 3 characters long.');
+      throw HttpError.BadRequest('Name must be at least 3 characters long.');
     }
     this._name = newName;
     this._updatedAt = new Date();
@@ -29,20 +46,6 @@ export class User {
   public async updatePassword(newPassword: string): Promise<void> {
     this._password = await Password.create(newPassword);
     this._updatedAt = new Date();
-  }
-
-  public static async create(data: CreateUserDTO): Promise<User> {
-    const { name, email, password } = data;
-
-    if (!User.isValidName(name)) throw new Error('Name must be at least 3 characters long.');
-
-    const id = data.id || uuidv7();
-    const created_at = new Date();
-    const updated_at = new Date();
-    const hashed = await Password.create(password);
-    const emailVO = Email.create(email);
-
-    return new User(id, name, emailVO, hashed, created_at, updated_at);
   }
 
   public static fromDatabase(data: IUser): User {
