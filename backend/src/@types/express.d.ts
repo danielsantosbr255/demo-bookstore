@@ -1,13 +1,11 @@
+import { ISession } from '@/modules/sessions/sessions.dto';
 import 'express';
 
 declare global {
   namespace Express {
     interface Request {
-      session: {
-        userId: number;
-        browser: string;
-      };
-      userId?: number;
+      session: ISession;
+      user_id?: string;
     }
   }
 }
