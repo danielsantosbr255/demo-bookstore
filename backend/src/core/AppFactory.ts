@@ -3,7 +3,7 @@ import logger from '@/common/utils/logger';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import { IModule } from './IModule';
+import { IModule, ModuleConstructor } from './IModule';
 
 export class AppFactory {
   private readonly app = express();
@@ -17,8 +17,8 @@ export class AppFactory {
     this.useErrorHandler();
   }
 
-  static create(rootModule: new () => IModule): AppFactory {
-    return new AppFactory(new rootModule());
+  static create(rootModule: ModuleConstructor): AppFactory {
+    return new AppFactory(new rootModule(express.Router()));
   }
 
   public setGlobalPrefix(prefix: string): void {
