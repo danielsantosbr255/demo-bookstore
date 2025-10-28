@@ -1,22 +1,26 @@
+import { HttpError } from '@/core/errors/HttpError';
+import { SessionsService } from '@/modules/sessions/sessions.service';
 import { NextFunction, Request, Response } from 'express';
-import { CustomError } from '../utils/CustomError';
-// import { getUserAgent } from '../utils/user-agent.util';
+import { getDb } from '../database';
 
-// [TODO]
 export const AuthGuard = async (req: Request, _: Response, next: NextFunction) => {
-  const token = req.cookies.userId;
+  const sessionId = req.cookies.sessionId;
+  const sessionService = new SessionsService(getDb());
 
-  if (!token) throw new CustomError('Acesso negado!', 401);
-  req.userId = token;
+  const session = await sessionService.getById(sessionId);
 
-  // const user = { id: req.session.userId, browser: req.session.browser };
+  if (!session) throw HttpError.Unauthorized();
+  if (session.isExpired()) throw HttpError.Unauthorized();
 
-  // const userAgent = req.headers['user-agent'] ?? 'Desconhecido';
-  // const ua = getUserAgent(userAgent);
+  req.session = session;
+  req.user_id = session.user_id;
+
+  // const user_agent = req.headers['user-agent'] ?? 'Desconhecido';
+  // const ua = getUserAgent(user_agent);
 
   // if (ua.browser !== req.session.browser) {
   //   console.error('❌ Context not match.');
-  //   throw new CustomError('Acesso negado!', 401);
+  //   throw new HttpError.Unauthorized();
   // }
 
   next();
