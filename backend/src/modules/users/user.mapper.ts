@@ -1,4 +1,4 @@
-import { IUser, UpdateUserDTO } from './dto/user.dto';
+import { IUser, UpdateUserDTO } from './user.dto';
 import { User } from './user.entity';
 
 export class UserMapper {
