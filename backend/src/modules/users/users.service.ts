@@ -1,8 +1,8 @@
 import { PaginationMetadata, PaginationQueryParams } from '@/@types/pagination.js';
 import { IDatabase } from '@/common/database/IDatabase.js';
-import { CustomError } from '@/common/utils/CustomError.js';
 import { createPaginationMetadata, parsePaginationParams } from '@/common/utils/pagination.util.js';
-import { CreateUserDTO, IUser, UpdateUserDTO, UserResponseDTO } from './dto/user.dto.js';
+import { HttpError } from '@/core/errors/HttpError.js';
+import { CreateUserDTO, IUser, UpdateUserDTO, UserResponseDTO } from './user.dto.js';
 import { User } from './user.entity.js';
 import { UserMapper } from './user.mapper.js';
 
@@ -20,7 +20,7 @@ export default class UsersService {
       where: { email: data.email },
     });
 
-    if (userExists) throw new CustomError('User already exists!', 409);
+    if (userExists) throw HttpError.Conflict('User already exists!');
     const userEntity = await User.create(data);
 
     const user = await this.db.table<IUser>(this.table).create({
@@ -66,11 +66,11 @@ export default class UsersService {
 
   async update(id: string, data: UpdateUserDTO): Promise<UserResponseDTO> {
     const userExists = await this.db.table<IUser>(this.table).findUnique({ where: { id } });
-    if (!userExists) throw new CustomError('User not found!', 404);
+    if (!userExists) throw HttpError.NotFound('User not found!');
 
     if (data.email && data.email !== userExists.email) {
       const userExists = await this.db.table<IUser>(this.table).findUnique({ where: { email: data.email } });
-      if (userExists) throw new CustomError('User already exists!', 409);
+      if (userExists) throw HttpError.Conflict('User already exists!');
     }
 
     const userEntity = User.fromDatabase(userExists);
@@ -93,7 +93,7 @@ export default class UsersService {
       select: ['id'],
     });
 
-    if (!user) throw new CustomError('User not found!', 404);
+    if (!user) throw HttpError.NotFound('User not found!');
     this.db.table<IUser>(this.table).delete({ where: { id } });
   }
 }
