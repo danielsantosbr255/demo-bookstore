@@ -1,10 +1,12 @@
 import type { Router } from 'express';
 
+export type AppRouter = Router & {};
+export type ModuleConstructor = new (router: AppRouter) => IModule;
+
 export interface IModule {
-  name: string;
-  router: Router;
-  imports?: (new () => IModule)[];
-  controller?: object;
-  service?: object;
-  repository?: object;
+  readonly name: string;
+  readonly router: Router;
+  readonly imports?: ModuleConstructor[];
+  readonly controller?: object;
+  readonly service?: object;
 }

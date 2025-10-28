@@ -21,6 +21,10 @@ export class AppFactory {
     return new AppFactory(new rootModule());
   }
 
+  public setGlobalPrefix(prefix: string): void {
+    this.app.use(prefix, this.router);
+  }
+
   public enableCors(): void {
     this.app.use(cors({ origin: '*', credentials: true }));
   }
@@ -31,16 +35,12 @@ export class AppFactory {
     this.app.use(express.urlencoded({ extended: true }));
   }
 
-  public setGlobalPrefix(prefix: string): void {
-    this.app.use(prefix, this.router);
-  }
-
   private registerRouter(): void {
     this.router.use(this.rootModule.name, this.rootModule.router);
 
     if (this.rootModule.imports) {
       for (const mod of this.rootModule.imports) {
-        const module = new mod();
+        const module = new mod(express.Router());
         const path = `/${module.name}`;
 
         this.router.use(path, module.router);
