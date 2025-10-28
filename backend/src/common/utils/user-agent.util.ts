@@ -1,7 +1,7 @@
 import { UAParser } from 'ua-parser-js';
 
-export const getUserAgent = (userAgent: string) => {
-  const ua = UAParser(userAgent);
+export const getUserAgent = (user_agent: string) => {
+  const ua = UAParser(user_agent);
 
   const os = ua.os.name ? `${ua.os.name} ${ua.os.version}`.trim() : 'Desconhecido';
   const browser = ua.browser.name ? `${ua.browser.name}`.trim() : 'Desconhecido';
