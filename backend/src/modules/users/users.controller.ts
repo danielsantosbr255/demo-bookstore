@@ -1,4 +1,4 @@
-import { CustomError } from '@/common/utils/CustomError';
+import { HttpError } from '@/core/errors/HttpError';
 import type { Request, Response } from 'express';
 import UserService from './users.service';
 
@@ -17,7 +17,7 @@ export default class UserController {
 
   getById = async (req: Request, res: Response) => {
     const { id } = req.params as { id: string };
-    if (!id) throw new CustomError('User ID is required!', 400);
+    if (!id) throw HttpError.BadRequest('User ID is required!');
 
     const user = await this.service.getById(id);
     res.json({ message: 'User', data: user });
@@ -32,10 +32,9 @@ export default class UserController {
 
   delete = async (req: Request, res: Response) => {
     const { id } = req.params;
-    if (!id) throw new CustomError('User ID is required!', 400);
+    if (!id) throw HttpError.BadRequest('User ID is required!');
 
     await this.service.delete(id);
-
     res.json({ message: 'User deleted successfuly!', data: id });
   };
 }
