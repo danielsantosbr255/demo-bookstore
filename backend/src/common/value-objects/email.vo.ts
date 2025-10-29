@@ -1,23 +1,16 @@
-export class Email {
-  private constructor(private readonly _value: string) {}
+import { HttpError } from '@/core/errors/HttpError';
 
-  get value(): string {
-    return this._value;
-  }
+export class Email {
+  private constructor(public readonly value: string) {}
 
   static create(value: string): Email {
     if (!this.isValid(value)) {
-      throw new Error('Email inválido.');
+      throw HttpError.BadRequest('Email inválido.');
     }
-
     return new Email(value.toLowerCase().trim());
   }
 
   static isValid(value: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  }
-
-  equals(other: Email): boolean {
-    return this._value === other._value;
   }
 }
