@@ -5,5 +5,16 @@
   },
   "code-runner.runInTerminal": true,
   "code-runner.clearPreviousOutput": true,
-  "postman.settings.dotenv-detection-notification-visibility": false
+  "postman.settings.dotenv-detection-notification-visibility": false,
+  "material-icon-theme.folders.associations": {
+    "users": "admin",
+    "sessions": "vm"
+  },
+  "material-icon-theme.files.associations": {
+    "*.ts": "typescript",
+    "**.json": "json",
+    "fileName.ts": "angular",
+    "*.dto.ts": "Apiblueprint",
+    "*.entity.ts": "3d"
+  }
 }
