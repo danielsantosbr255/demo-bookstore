@@ -1,8 +1,10 @@
 import { getClientIp } from '@/common/utils/getClientIp';
+import { validateData } from '@/common/utils/validateData.util';
 import { config } from '@/core/config';
 import { Request, Response } from 'express';
+import { createSessionSchema } from '../sessions/sessions.dto';
 import { SessionsService } from '../sessions/sessions.service';
-import { signInSchema, signOutSchema } from './auth.dto';
+import { signInSchema, signOutSchema, signUpSchema } from './auth.dto';
 import { AuthService } from './auth.service';
 
 export class AuthController {
@@ -12,19 +14,25 @@ export class AuthController {
   ) {}
 
   signUp = async (req: Request, res: Response) => {
-    const createdUser = await this.service.signUp(req.body);
-    res.status(201).json({ message: 'User created successfuly!', data: createdUser });
+    const { name, email, password } = validateData(req.body, signUpSchema);
+    const createdUser = await this.service.signUp({ name, email, password });
+
+    res.status(201).json({
+      message: 'User created successfuly!',
+      data: createdUser,
+    });
   };
 
   signIn = async (req: Request, res: Response) => {
-    const { email, password } = signInSchema.parse(req.body);
+    const { email, password } = validateData(req.body, signInSchema);
     const userLogged = await this.service.signIn({ email, password });
 
     const user_agent = req.headers['user-agent'] ?? 'Desconhecido';
     const user_id = userLogged.id;
     const ip = getClientIp(req);
 
-    const createdSession = await this.sessionsService.create({ user_id, user_agent, ip });
+    const parsedSession = validateData({ user_id, user_agent, ip }, createSessionSchema);
+    const createdSession = await this.sessionsService.create(parsedSession);
 
     res.cookie('sessionId', createdSession.id, {
       httpOnly: true,
@@ -40,14 +48,17 @@ export class AuthController {
   };
 
   signOut = async (req: Request, res: Response) => {
-    const { session_id, user_id } = signOutSchema.parse({
-      session_id: req.cookies.sessionId,
-      user_id: req.user_id,
-    });
+    const user_id = req.user_id ?? '';
+    const session_id = req.cookies.sessionId;
 
-    await this.sessionsService.deleteByUserId(session_id, user_id);
+    const parsedData = validateData({ session_id, user_id }, signOutSchema);
+    await this.sessionsService.deleteByUserId(parsedData.session_id, parsedData.user_id);
 
     res.clearCookie('sessionId');
-    res.json({ message: 'User logged out successfuly!', data: session_id });
+
+    res.json({
+      message: 'User logged out successfuly!',
+      data: parsedData,
+    });
   };
 }
