@@ -1,6 +1,7 @@
 import { config } from '@/core/config';
+import { HttpError } from '@/core/errors/HttpError';
 import { NextFunction, Request, Response } from 'express';
-import { CustomError } from '../utils/CustomError';
+import { z } from 'zod';
 import logger from '../utils/logger';
 
 const formatStackTrace = (stack: string | undefined) => {
@@ -15,13 +16,20 @@ const formatStackTrace = (stack: string | undefined) => {
 const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (config.env !== 'production') {
     logger.error(`Path Request: ${req.method} ${req.originalUrl}`);
-    logger.error('Status:', err instanceof CustomError ? err.statusCode : 500);
+    logger.error('Status:', err instanceof HttpError ? err.statusCode : 500);
     logger.error('Message:', err.message);
     logger.error('Stack trace:', formatStackTrace(err.stack));
   }
 
-  if (err instanceof CustomError) {
+  if (err instanceof HttpError) {
     res.status(err.statusCode).json({ message: err.message, statusCode: err.statusCode });
+    next();
+    return;
+  }
+
+  if (err instanceof z.ZodError) {
+    const message = err.issues[0].message;
+    res.status(400).json({ message, statusCode: 400 });
     next();
     return;
   }
