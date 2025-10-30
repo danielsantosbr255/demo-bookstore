@@ -6,7 +6,7 @@ export class UserMapper {
     const data: Partial<IUser> = {};
 
     if (dto.name) data.name = user.name;
-    if (dto.email) data.email = user.email.value;
+    if (dto.email) data.email = user.email;
 
     return data;
   }
@@ -15,11 +15,15 @@ export class UserMapper {
     return {
       id: user.id,
       name: user.name,
-      email: user.email.value,
-      password: user.password.hashed,
+      email: user.email,
+      password: user.password,
       created_at: user.created_at,
       updated_at: user.updated_at,
     };
+  }
+
+  static fromDatabase(user: IUser): User {
+    return User.restore(user);
   }
 
   static toResponse(user: IUser) {

@@ -1,13 +1,13 @@
 import { Email } from '@/common/value-objects/email.vo';
+import { Name } from '@/common/value-objects/name.vo';
 import { Password } from '@/common/value-objects/password.vo';
-import { HttpError } from '@/core/errors/HttpError';
 import { v7 as uuidv7 } from 'uuid';
 import { CreateUserDTO, IUser } from './user.dto';
 
 export class User {
   private constructor(
     public readonly id: string,
-    private _name: string,
+    private _name: Name,
     private _email: Email,
     private _password: Password,
     private _createdAt: Date,
@@ -15,26 +15,29 @@ export class User {
   ) {}
 
   public static async create(data: CreateUserDTO): Promise<User> {
-    const { name, email, password } = data;
-
-    if (!User.isValidName(name)) {
-      throw HttpError.BadRequest('Name must be at least 3 characters long.');
-    }
-
     const id = data.id || uuidv7();
+    const name = Name.create(data.name);
+    const email = Email.create(data.email);
+    const password = await Password.create(data.password);
     const created_at = new Date();
     const updated_at = new Date();
-    const hashed = await Password.create(password);
-    const emailVO = Email.create(email);
 
-    return new User(id, name, emailVO, hashed, created_at, updated_at);
+    return new User(id, name, email, password, created_at, updated_at);
+  }
+
+  public static restore(data: IUser): User {
+    const id = data.id;
+    const name = Name.create(data.name);
+    const email = Email.create(data.email);
+    const password = Password.restore(data.password);
+    const created_at = data.created_at;
+    const updated_at = data.updated_at;
+
+    return new User(id, name, email, password, created_at, updated_at);
   }
 
   public updateName(newName: string): void {
-    if (!User.isValidName(newName)) {
-      throw HttpError.BadRequest('Name must be at least 3 characters long.');
-    }
-    this._name = newName;
+    this._name = Name.create(newName);
     this._updatedAt = new Date();
   }
 
@@ -48,23 +51,14 @@ export class User {
     this._updatedAt = new Date();
   }
 
-  public static fromDatabase(data: IUser): User {
-    const { id, name, email, password, created_at, updated_at } = data;
-    return new User(id, name, Email.create(email), Password.restore(password), created_at, updated_at);
-  }
-
-  private static isValidName(name: string): boolean {
-    return typeof name === 'string' && name.trim().length >= 3;
-  }
-
   public get name(): string {
-    return this._name;
+    return this._name.value;
   }
-  public get email(): Email {
-    return this._email;
+  public get email(): string {
+    return this._email.value;
   }
-  public get password(): Password {
-    return this._password;
+  public get password(): string {
+    return this._password.hashed;
   }
   public get created_at(): Date {
     return this._createdAt;
