@@ -12,7 +12,12 @@ export default class UserController {
 
   getMany = async (req: Request, res: Response) => {
     const result = await this.service.getMany(req.query);
-    res.json(result);
+
+    res.json({
+      message: 'Users',
+      data: result.users,
+      metadata: result.metadata,
+    });
   };
 
   getById = async (req: Request, res: Response) => {

@@ -1,6 +1,7 @@
 import { PaginationMetadata, PaginationQueryParams } from '@/@types/pagination.js';
 import { IDatabase } from '@/common/database/IDatabase.js';
 import { createPaginationMetadata, parsePaginationParams } from '@/common/utils/pagination.util.js';
+import { Email } from '@/common/value-objects/email.vo.js';
 import { HttpError } from '@/core/errors/HttpError.js';
 import { CreateUserDTO, IUser, UpdateUserDTO, UserResponseDTO } from './user.dto.js';
 import { User } from './user.entity.js';
@@ -11,27 +12,34 @@ type query = PaginationQueryParams & {
   email?: string;
 };
 
+type GetManyResponse = {
+  users: UserResponseDTO[];
+  metadata: PaginationMetadata;
+};
+
 export default class UsersService {
   private readonly table = 'users';
+
   constructor(private readonly db: IDatabase) {}
 
   async create(data: CreateUserDTO): Promise<UserResponseDTO> {
+    const userEntity = await User.create(data);
+
     const userExists = await this.db.table<IUser>(this.table).findUnique({
-      where: { email: data.email },
+      where: { email: userEntity.email },
     });
 
     if (userExists) throw HttpError.Conflict('User already exists!');
-    const userEntity = await User.create(data);
 
     const user = await this.db.table<IUser>(this.table).create({
       data: UserMapper.toDatabase(userEntity),
       omit: ['password'],
     });
 
-    return user;
+    return UserMapper.toResponse(user);
   }
 
-  async getMany(query: query): Promise<{ data: UserResponseDTO[]; metadata: PaginationMetadata }> {
+  async getMany(query: query): Promise<GetManyResponse> {
     const where: Record<string, string> = {};
     const { page, pageSize, offset } = parsePaginationParams(query);
 
@@ -48,7 +56,7 @@ export default class UsersService {
     const totalItems = await this.db.table<IUser>(this.table).count({ where });
     const metadata = createPaginationMetadata({ page, pageSize, totalItems });
 
-    return { data: users, metadata };
+    return { users, metadata };
   }
 
   async getById(id: string): Promise<UpdateUserDTO | null> {
@@ -60,6 +68,8 @@ export default class UsersService {
   }
 
   async getByEmail(email: string): Promise<IUser | null> {
+    if (!Email.isValid(email)) throw HttpError.BadRequest('Invalid email!');
+
     const user = await this.db.table<IUser>(this.table).findUnique({ where: { email } });
     return user;
   }
@@ -69,11 +79,13 @@ export default class UsersService {
     if (!userExists) throw HttpError.NotFound('User not found!');
 
     if (data.email && data.email !== userExists.email) {
-      const userExists = await this.db.table<IUser>(this.table).findUnique({ where: { email: data.email } });
-      if (userExists) throw HttpError.Conflict('User already exists!');
+      if (!Email.isValid(data.email)) throw HttpError.BadRequest('Invalid email!');
+
+      const emailExists = await this.db.table<IUser>(this.table).findUnique({ where: { email: data.email } });
+      if (emailExists) throw HttpError.Conflict('Email already registered!');
     }
 
-    const userEntity = User.fromDatabase(userExists);
+    const userEntity = User.restore(userExists);
 
     if (data.name) userEntity.updateName(data.name);
     if (data.email) userEntity.updateEmail(data.email);
