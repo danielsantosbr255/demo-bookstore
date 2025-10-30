@@ -1,10 +1,12 @@
+import { HttpError } from '@/core/errors/HttpError';
 import argon from 'argon2';
 
 export class Password {
   private constructor(public readonly hashed: string) {}
 
   static async create(raw: string): Promise<Password> {
-    if (raw.length < 6) throw new Error('Password too short');
+    if (raw.length < 6) throw HttpError.BadRequest('Password too short');
+
     const hashed = await argon.hash(raw, { type: argon.argon2id });
     return new Password(hashed);
   }
@@ -13,7 +15,7 @@ export class Password {
     return new Password(hashed);
   }
 
-  async compare(raw: string): Promise<boolean> {
-    return await argon.verify(this.hashed, raw);
+  static async compare(hashed: string, raw: string): Promise<boolean> {
+    return await argon.verify(hashed, raw);
   }
 }
