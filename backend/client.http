@@ -21,8 +21,8 @@ POST {{HOST}}/users
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "john@email.com",
+  "name": "Dan Doe",
+  "email": "dan@email.com",
   "password": "1231fgasd"
 }
 
@@ -55,12 +55,24 @@ Content-Type: application/json
   "password": "123123"
 }
 
-### ------ SIGN-IN ------ ###
+### ------ AUTH ------ ###
 POST {{HOST}}/auth/sign-in
 Content-Type: application/json
 
 {
-  "email": "john@email.com",
-  "password": "123123"
+  "email": "john@email.com"
 }
 
+###
+POST {{HOST}}/auth/sign-out
+
+### ------- SESSIONS ------- ###
+GET {{HOST}}/sessions
+
+###
+POST {{HOST}}/sessions
+Content-Type: application/json
+
+{
+
+}
